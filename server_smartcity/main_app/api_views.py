@@ -1,39 +1,48 @@
-from rest_framework import viewsets, permissions
-from rest_framework.pagination import PageNumberPagination
-from django.db.models import Q
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from .models import Report
-from .serializers import ReportSerializer
-from .permissions import IsOwnerAndDraftOrReadOnly
-
-class ReportPagination(PageNumberPagination):
-    page_size = 10
-    page_size_query_param = 'page_size'
-    max_page_size = 100
+from .serializers import ReportSerializer # Sesuaikan nama serializer kelompokmu
 
 class ReportViewSet(viewsets.ModelViewSet):
     serializer_class = ReportSerializer
-    pagination_class = ReportPagination
-
-    def get_permissions(self):
-        if self.action in ['update', 'partial_update', 'destroy']:
-            return [permissions.IsAuthenticated(), IsOwnerAndDraftOrReadOnly()]
-        return [permissions.IsAuthenticated()]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
-        # Mengurutkan otomatis berdasarkan laporan terbaru (Lab 12)
-        queryset = Report.objects.all().order_by('-updated_at')
-        
-        # Server Side Filtering menangkap parameter kueri URL ?tab= (Lab 12)
-        tab = self.request.query_params.get('tab', None)
-        if tab == 'my_reports':
-            return queryset.filter(reporter=user)
-        elif tab == 'feed':
-            return queryset.filter(~Q(reporter=user) & ~Q(status='DRAFT'))
-        
-        # Default fallback untuk rekap status (Lab 12)
-        return queryset.filter(~Q(status='DRAFT') | Q(status='DRAFT', reporter=user))
+        # Mengembalikan semua data laporan untuk ditampilkan di tabel
+        return Report.objects.all().order_by('-id')
 
     def perform_create(self, serializer):
-        # Menyimpan relasi reporter secara otomatis dari user session JWT (Lab 10)
-        serializer.save(reporter=self.request.user)
+        # Saat Warga/Client menambah laporan, otomatis simpan siapa pembuatnya
+        serializer.save(user=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        user = request.user
+
+        # -----------------------------------------------------------
+        # LOGIKA 1: JIKA YANG AKSES ADALAH CLIENT (WARGA BUKAN ADMIN)
+        # -----------------------------------------------------------
+        if not user.is_staff and not user.is_superuser:
+            return Response(
+                {"detail": "Gagal! Warga/Client hanya bisa menambah laporan, tidak diizinkan mengubah data."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        # -----------------------------------------------------------
+        # LOGIKA 2: JIKA ADMIN INGIN MENGUBAH LAPORAN YANG MASIH DRAFT
+        # -----------------------------------------------------------
+        # Pastikan field status di model Report kelompokmu namanya 'status' 
+        # dan nilai string untuk draf adalah 'draft' (silakan sesuaikan)
+        if instance.status.lower() == 'draft':
+            return Response(
+                {"detail": "Gagal! Admin tidak diizinkan mengubah laporan yang statusnya masih Draft."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        # Jika lolos validasi di atas, izinkan Admin mengubah data
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
