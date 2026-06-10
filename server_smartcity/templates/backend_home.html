@@ -12,7 +12,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .navbar-custom {
-            background-color: #0056b3; /* Biru gelap profesional */
+            background-color: #0056b3; 
             padding: 15px 0;
         }
         .navbar-custom .navbar-brand {
@@ -54,10 +54,6 @@
             .hero-banner p {
                 font-size: 1rem !important;
             }
-            .navbar-custom .btn {
-                width: 100%;
-                margin-top: 5px;
-            }
         }
     </style>
 </head>
@@ -76,9 +72,9 @@
                     <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalTentang"><i class="fa-solid fa-circle-info me-1"></i> Tentang</a></li>
                     <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalKontak"><i class="fa-solid fa-address-book me-1"></i> Kontak</a></li>
                 </ul>
-                <div class="d-flex flex-column flex-lg-row gap-2">
-                    <a href="/login-frontend/" class="btn btn-light text-primary fw-bold px-4 shadow-sm"><i class="fa-solid fa-right-to-bracket me-1"></i> Login</a>
-                    <a href="/register-frontend/" class="btn btn-outline-light px-3"><i class="fa-solid fa-user-plus me-1"></i> Daftar Warga</a>
+                <div class="d-none d-lg-flex gap-2">
+                    <a href="/login-frontend/" class="btn btn-light text-primary fw-bold px-4 shadow-sm"> Login</a>
+                    <a href="/register-frontend/" class="btn btn-outline-light px-3"> Daftar Warga</a>
                 </div>
             </div>
         </div>
@@ -104,12 +100,14 @@
             </p>
         </div>
 
-        <div class="row g-3 mt-2 d-lg-none">
-            <div class="col-6">
-                <a href="/login-frontend/" class="btn btn-primary w-100 py-3 shadow-sm fw-bold"><i class="fa-solid fa-right-to-bracket d-block mb-1 fs-4"></i> Masuk / Login</a>
-            </div>
-            <div class="col-6">
-                <a href="/register-frontend/" class="btn btn-success w-100 py-3 shadow-sm fw-bold"><i class="fa-solid fa-user-plus d-block mb-1 fs-4"></i> Daftar Akun</a>
+        <div class="mt-4 d-lg-none">
+            <div style="display: flex; gap: 15px; width: 100%;">
+                <a href="/login-frontend/" style="flex: 1; text-align: center; background-color: #007bff; color: white; text-decoration: none; padding: 15px; border-radius: 10px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <i class="fa-solid fa-right-to-bracket d-block mb-1 fs-4"></i> Masuk / Login
+                </a>
+                <a href="/register-frontend/" style="flex: 1; text-align: center; background-color: #198754; color: white; text-decoration: none; padding: 15px; border-radius: 10px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <i class="fa-solid fa-user-plus d-block mb-1 fs-4"></i> Daftar Akun
+                </a>
             </div>
         </div>
 
@@ -148,7 +146,7 @@
                                 <td><i class="fa-solid fa-location-dot text-danger me-1"></i> sungai</td>
                                 <td class="text-center">
                                     <span class="badge bg-primary text-white px-3 py-2 rounded-pill">Terverifikasi</span>
-                                </td>
+                                end
                                 <td class="text-muted small">Tidak Ada Tindakan</td>
                                 <td class="text-center pe-4">
                                     <button class="btn btn-sm btn-light border"><i class="fa-solid fa-eye"></i></button>
@@ -163,11 +161,11 @@
 
     </div>
 
-    <div class="modal fade" id="modalTentang" tabindex="-1" aria-labelledby="modalTentangLabel" aria-hidden="true">
+    <div class="modal fade" id="modalTentang" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="modalTentangLabel"><i class="fa-solid fa-circle-info me-2"></i>Tentang Projek Sistem</h5>
+                    <h5 class="modal-title"><i class="fa-solid fa-circle-info me-2"></i>Tentang Projek Sistem</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
@@ -184,11 +182,11 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalKontak" tabindex="-1" aria-labelledby="modalKontakLabel" aria-hidden="true">
+    <div class="modal fade" id="modalKontak" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="modalKontakLabel"><i class="fa-solid fa-address-book me-2"></i>Kontak Resmi Pengembang</h5>
+                    <h5 class="modal-title"><i class="fa-solid fa-address-book me-2"></i>Kontak Resmi Pengembang</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-0">
