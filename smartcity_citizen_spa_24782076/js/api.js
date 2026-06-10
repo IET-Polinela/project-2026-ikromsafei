@@ -1,4 +1,4 @@
-const BASE_URL = 'http://127.0.0.1:8000/api';
+const BASE_URL = "http://103.151.63.87:8008/api/";
 
 async function requestAPI(endpoint, method = 'GET', bodyData = null) {
     const url = `${BASE_URL}${endpoint}`;
