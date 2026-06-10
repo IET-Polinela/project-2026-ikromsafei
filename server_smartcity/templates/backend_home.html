@@ -3,215 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kota IET - Portal Pusat Pelaporan</title>
+    <title>Kota IET - Sistem Informasi Pelaporan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
-        body { background-color: #ffffff; font-family: sans-serif; }
-        .navbar-brand { font-weight: bold; font-size: 20px; }
-        .sub-header { font-size: 24px; font-weight: bold; color: #0d6efd; }
-        .table th { background-color: #212529; color: #ffffff; font-weight: bold; }
-        .nav-link { cursor: pointer; }
-        .content-section { display: none; }
-        .content-section.active { display: block; }
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar-custom {
+            background-color: #007bff; /* Warna Biru Khas Lab 1-12 */
+        }
+        .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+            color: #ffffff !important;
+        }
+        .breadcrumb-section {
+            background-color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .table-container {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary py-2 shadow-sm">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand d-flex align-items-center" onclick="showSection('home')">
-                <i class="bi bi-building-fill me-2"></i>Kota IET
-            </a>
+    <nav class="navbar navbar-expand-lg navbar-custom shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">📊 Kota IET</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link text-white fw-medium" onclick="showSection('home')"><i class="bi bi-house-door-fill me-1"></i>Rumah</a></li>
-                    <li class="nav-item"><a class="nav-link text-white fw-medium" onclick="showSection('laporan')"><i class="bi bi-file-earmark-text-fill me-1"></i>Laporan</a></li>
-                    <li class="nav-item"><a class="nav-link text-white fw-medium" onclick="showSection('tentang')"><i class="bi bi-info-circle-fill me-1"></i>Tentang</a></li>
-                    <li class="nav-item"><a class="nav-link text-white fw-medium" onclick="showSection('kontak')"><i class="bi bi-envelope-fill me-1"></i>Kontak</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/">🏠 Rumah</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#tabel-section">📋 Laporan</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">ℹ️ Tentang</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">📞 Kontak</a></li>
                 </ul>
-                
-                <div class="d-flex align-items-center gap-2">
-                    {% if user.is_authenticated %}
-                        <span class="text-white small me-2"><i class="bi bi-person-circle me-1"></i>Halo, <b>{{ user.username }}</b> 
-                            ({% if user.is_admin %}Admin{% else %}Warga Citizen{% endif %})
-                        </span>
-                        <a href="/logout-frontend/" class="btn btn-danger btn-sm fw-bold"><i class="bi bi-box-arrow-right me-1"></i>Keluar</a>
-                    {% else %}
-                        <a onclick="showSection('login')" class="btn btn-outline-light btn-sm fw-bold"><i class="bi bi-box-arrow-in-right me-1"></i>Login</a>
-                        <a onclick="showSection('register')" class="btn btn-light btn-sm text-primary fw-bold"><i class="bi bi-person-plus-fill me-1"></i>Daftar Warga</a>
-                    {% endif %}
+                <div class="d-flex">
+                    <a href="/login-frontend/" class="btn btn-outline-light btn-sm px-3">🚪 Login</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="container-fluid px-4 mt-3">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-light p-2 rounded small">
-                <li class="breadcrumb-item text-primary">Kota IET</li>
-                <li class="breadcrumb-item active" id="currentBreadcrumb">Rumah</li>
-            </ol>
-        </nav>
-    </div>
-
-    <div class="container-fluid px-4 mt-2">
+    <div class="container">
         {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show p-2 small" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close p-2" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
+            <div class="mt-3">
+                {% for message in messages %}
+                    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
 
-        <div id="home-section" class="content-section active">
-            <div class="p-5 mb-4 bg-light rounded-3 border">
-                <div class="container-fluid py-5">
-                    <h1 class="display-5 fw-bold text-primary">Sistem Informasi Kota IET</h1>
-                    <p class="col-md-8 fs-4">Selamat datang di aplikasi repositori terpusat penanganan keluhan dan pelaporan infrastruktur wilayah administrasi Kabupaten Pesawaran.</p>
-                    <button class="btn btn-primary btn-lg fw-bold" onclick="showSection('laporan')">Lihat Daftar Laporan</button>
-                </div>
-            </div>
+        <div class="breadcrumb-section">
+            <span class="text-primary">Rumah</span> / <span class="text-muted">Laporan</span>
         </div>
 
-        <div id="tentang-section" class="content-section">
-            <div class="card p-4 shadow-sm border">
-                <h3 class="fw-bold text-primary"><i class="bi bi-info-circle-fill me-2"></i>Tentang Aplikasi</h3>
-                <hr>
-                <p>Aplikasi <b>Kota IET</b> dirancang khusus sebagai proyek implementasi matakuliah Pemrograman Internet Semester 4 di Program Studi Teknologi Rekayasa Internet, Politeknik Negeri Lampung.</p>
-                <p>Sistem ini berfungsi menjembatani komunikasi antara masyarakat umum Kabupaten Pesawaran dengan pihak otoritas dinas terkait dalam menangani kerusakan jalan, tumpukan keluhan sampah, banjir drainase, hingga perbaikan fasilitas penerangan umum.</p>
-            </div>
-        </div>
-
-        <div id="kontak-section" class="content-section">
-            <div class="card p-4 shadow-sm border">
-                <h3 class="fw-bold text-primary"><i class="bi bi-envelope-fill me-2"></i>Hubungi Kami</h3>
-                <hr>
-                <p>Jika mengalami kendala teknis operasional server database atau pengujian REST API, silakan hubungi tim administrasi pusat data teknologi:</p>
-                <ul>
-                    <li><b>Institusi:</b> Lab Jaringan & Pemrograman - Politeknik Negeri Lampung</li>
-                    <li><b>Pengembang Sistem:</b> Ikrom Safei (NPM: 24782076)</li>
-                    <li><b>Lokasi Wilayah Fokus:</b> Pusat Pemerintahan Kabupaten Pesawaran, Lampung</li>
-                </ul>
-            </div>
-        </div>
-
-        <div id="login-section" class="content-section">
-            <div class="row justify-content-center mt-4">
-                <div class="col-md-4">
-                    <div class="card shadow p-4 border">
-                        <h4 class="fw-bold text-center text-primary mb-3"><i class="bi bi-shield-lock-fill me-2"></i>Login Pengguna</h4>
-                        <form method="POST" action="/login-frontend/">
-                            {% csrf_token %}
-                            <div class="mb-3">
-                                <label class="form-label small fw-bold">Username</label>
-                                <input type="text" name="username" class="form-control" required placeholder="Masukkan username">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label small fw-bold">Password</label>
-                                <input type="password" name="password" class="form-control" required placeholder="Masukkan password">
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100 fw-bold">Masuk Sistem</button>
-                        </form>
-                        <div class="text-center mt-3">
-                            <small class="text-muted">Belum punya akun? <a onclick="showSection('register')" class="text-primary nav-link d-inline p-0 fw-bold">Daftar disini</a></small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="register-section" class="content-section">
-            <div class="row justify-content-center mt-4">
-                <div class="col-md-4">
-                    <div class="card shadow p-4 border">
-                        <h4 class="fw-bold text-center text-success mb-3"><i class="bi bi-person-plus-fill me-2"></i>Registrasi Warga Baru</h4>
-                        <p class="text-muted small text-center mb-3">Akun otomatis terdaftar dengan hak akses Citizen (Warga Masyarakat Pesawaran)</p>
-                        <form method="POST" action="/register-frontend/">
-                            {% csrf_token %}
-                            <div class="mb-3">
-                                <label class="form-label small fw-bold">Username Baru</label>
-                                <input type="text" name="username" class="form-control" required placeholder="Contoh: ikrom_warga">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label small fw-bold">Email</label>
-                                <input type="email" name="email" class="form-control" required placeholder="Contoh: warga@mail.com">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label small fw-bold">Password</label>
-                                <input type="password" name="password" class="form-control" required placeholder="Minimal 6 karakter">
-                            </div>
-                            <button type="submit" class="btn btn-success w-100 fw-bold">Daftar Sekarang</button>
-                        </form>
-                        <div class="text-center mt-3">
-                            <small class="text-muted">Sudah punya akun? <a onclick="showSection('login')" class="text-primary nav-link d-inline p-0 fw-bold">Login disini</a></small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="laporan-section" class="content-section">
-            {% if user.is_authenticated and user.is_admin %}
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h2 class="sub-header text-primary fw-bold">Daftar Laporan masalah Dikabupaten pesawaran</h2>
-                    <a href="/admin/main_app/report/add/" class="btn btn-primary fw-bold btn-sm"><i class="bi bi-plus-circle-fill me-1"></i>Tambah Laporan</a>
-                </div>
-                <div class="mb-4">
-                    <input type="text" id="searchInput" class="form-control" style="max-width: 450px;" placeholder="🔍 Cari berdasarkan judul atau lokasi keluhan..." onkeyup="filterTable()">
-                </div>
-            {% else %}
-                <h2 class="text-primary fw-bold mb-4"><i class="bi bi-file-earmark-text me-2"></i>Daftar Laporan (Masyarakat Umum)</h2>
-                <div class="alert alert-info py-2 small"><i class="bi bi-info-circle me-2"></i>Anda masuk sebagai warga/belum login. Menu manajemen aksi tersembunyi.</div>
-            {% endif %}
-
+        <div id="tabel-section" class="table-container">
+            <h2 class="text-primary fw-bold mb-4">📄 Daftar Laporan</h2>
+            
             <div class="table-responsive">
-                <table class="table table-bordered table-striped align-middle" id="reportTable">
-                    <thead>
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-dark text-white">
                         <tr>
-                            <th>Judul</th>
-                            <th>Lokasi</th>
-                            <th>Status</th>
-                            {% if user.is_authenticated and user.is_admin %}
-                                <th>Aksi Admin</th>
-                            {% else %}
-                                <th>Alur Kerja Aksi</th>
-                            {% endif %}
+                            <th style="width: 25%;">Judul</th>
+                            <th style="width: 25%;">Lokasi</th>
+                            <th style="width: 15%; text-align: center;">Status</th>
+                            <th style="width: 20%;">Alur Kerja Aksi</th>
+                            <th style="width: 15%; text-align: center;">Opsi</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for report in reports %}
                         <tr>
-                            <td class="fw-bold">{{ report.title }}</td>
+                            <td class="fw-bold text-secondary">{{ report.title }}</td>
                             <td>{{ report.location }}</td>
-                            <td>
-                                {% if report.status == 'REPORTED' %}
-                                    <span class="badge bg-primary">Reported</span>
-                                {% elif report.status == 'VERIFIED' %}
-                                    <span class="badge bg-info text-dark">Terverifikasi</span>
-                                {% elif report.status == 'IN_PROGRESS' %}
-                                    <span class="badge bg-warning text-dark">Sedang Berlangsung</span>
-                                {% elif report.status == 'RESOLVED' %}
-                                    <span class="badge bg-success">Terselesaikan</span>
-                                {% else %}
-                                    <span class="badge bg-secondary">{{ report.status }}</span>
-                                {% endif %}
+                            <td class="text-center">
+                                <span class="badge bg-primary px-3 py-2">
+                                    {{ report.status|default:"Terverifikasi" }}
+                                </span>
                             </td>
-                            <td>
-                                {% if user.is_authenticated and user.is_admin %}
-                                    <div class="d-flex gap-1">
-                                        <a href="/admin/main_app/report/{{ report.id }}/change/" class="btn btn-xs btn-primary btn-sm py-0 px-2 fw-bold">Edit</a>
-                                        <a href="/admin/main_app/report/{{ report.id }}/delete/" class="btn btn-xs btn-danger btn-sm py-0 px-2 fw-bold">Hapus</a>
-                                    </div>
-                                {% else %}
-                                    <span class="text-muted small"><i class="bi bi-lock-fill me-1"></i>Hanya Baca</span>
-                                {% endif %}
+                            <td class="text-muted">Tidak Ada Tindakan</td>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-outline-secondary">
+                                    👁️
+                                </button>
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="4" class="text-center text-muted py-4">Belum ada data keluhan terdaftar di Kabupaten Pesawaran.</td>
+                            <td class="fw-bold text-secondary">sampash</td>
+                            <td>sungai</td>
+                            <td class="text-center"><span class="badge bg-primary px-3 py-2">Terverifikasi</span></td>
+                            <td class="text-muted">Tidak Ada Tindakan</td>
+                            <td class="text-center"><button class="btn btn-sm btn-outline-secondary">👁️</button></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -220,37 +115,6 @@
         </div>
     </div>
 
-    <script>
-        function showSection(sectionId) {
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(sectionId + '-section').classList.add('active');
-            document.getElementById('currentBreadcrumb').innerText = sectionId.toUpperCase();
-        }
-
-        function filterTable() {
-            const input = document.getElementById('searchInput');
-            if(!input) return;
-            const filter = input.value.toLowerCase();
-            const table = document.getElementById('reportTable');
-            const tr = table.getElementsByTagName('tr');
-
-            for (let i = 1; i < tr.length; i++) {
-                let showRow = false;
-                const tdTitle = tr[i].getElementsByTagName('td')[0];
-                const tdLocation = tr[i].getElementsByTagName('td')[1];
-
-                if (tdTitle || tdLocation) {
-                    const titleText = tdTitle.textContent || tdTitle.innerText;
-                    const locationText = tdLocation.textContent || tdLocation.innerText;
-                    if (titleText.toLowerCase().indexOf(filter) > -1 || locationText.toLowerCase().indexOf(filter) > -1) {
-                        showRow = true;
-                    }
-                }
-                tr[i].style.display = showRow ? "" : "none";
-            }
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
