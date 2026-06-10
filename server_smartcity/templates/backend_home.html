@@ -28,6 +28,7 @@
             padding: 25px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.08);
             margin-top: 20px;
+            scroll-margin-top: 20px; /* Biar pas di-scroll gak ketutupan navbar */
         }
     </style>
 </head>
@@ -43,8 +44,8 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link active" href="/">🏠 Rumah</a></li>
                     <li class="nav-item"><a class="nav-link" href="#tabel-section">📋 Laporan</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">ℹ️ Tentang</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">📞 Kontak</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalDataDiri">ℹ️ Tentang</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalDataDiri">📞 Kontak</a></li>
                 </ul>
                 <div class="d-flex">
                     <a href="/login-frontend/" class="btn btn-outline-light btn-sm px-3">🚪 Login</a>
@@ -111,6 +112,31 @@
                         {% endfor %}
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalDataDiri" tabindex="-1" aria-labelledby="modalDataDiriLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modalDataDiriLabel">👤 Profil Pengembang Sistem</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <h4 class="fw-bold text-dark mb-1">Ikrom Safei</h4>
+                    <p class="text-muted mb-3">NPM: 24782076</p>
+                    <hr>
+                    <ul class="list-group list-group-flush text-start">
+                        <li class="list-group-item"><strong>Jurusan:</strong> Teknologi Rekayasa Internet (TRI)</li>
+                        <li class="list-group-item"><strong>Semester:</strong> 4 (Empat)</li>
+                        <li class="list-group-item"><strong>Kampus:</strong> Politeknik Negeri Lampung</li>
+                        <li class="list-group-item"><strong>Kontak Server:</strong> mhs08@103.151.63.87</li>
+                    </ul>
+                </div>
+                <div class="modal-content-footer p-3 text-end bg-light border-top rounded-bottom">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+                </div>
             </div>
         </div>
     </div>
