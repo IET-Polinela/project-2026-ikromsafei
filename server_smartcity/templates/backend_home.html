@@ -3,62 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kota IET - Sistem Information Pelaporan</title>
+    <title>Kota IET - Sistem Informasi Pelaporan Masalah</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .navbar-custom {
-            background-color: #007bff; /* Warna Biru Khas Lab 1-12 */
+            background-color: #0056b3; /* Biru gelap profesional */
+            padding: 15px 0;
         }
-        .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+        .navbar-custom .navbar-brand {
+            color: #ffffff !important;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .navbar-custom .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+        }
+        .navbar-custom .nav-link:hover {
             color: #ffffff !important;
         }
-        .hero-section {
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-top: 30px;
+        .hero-banner {
+            background: linear-gradient(135deg, #0056b3 0%, #007bff 100%);
+            color: white;
+            padding: 40px 20px;
+            border-radius: 15px;
+            margin-top: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
-        .table-container {
+        .card-custom {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             background: #ffffff;
+            margin-bottom: 25px;
+        }
+        .table-responsive {
             border-radius: 8px;
-            padding: 25px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-            margin-top: 20px;
+            overflow: hidden;
+        }
+        /* Responsif HP Tweaks */
+        @media (max-width: 576px) {
+            .hero-banner h1 {
+                font-size: 1.8rem;
+            }
+            .hero-banner p {
+                font-size: 1rem !important;
+            }
+            .navbar-custom .btn {
+                width: 100%;
+                margin-top: 5px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-custom shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-custom navbar-dark shadow-sm">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="/">🏢 Kota IET</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <a class="navbar-brand" href="/"><i class="fa-solid fa-city me-2"></i> Kota IET</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link active" href="/">🏠 Rumah</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#tabel-section">📋 Laporan</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalTentang">ℹ️ Tentang</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalKontak">📞 Kontak</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/"><i class="fa-solid fa-house me-1"></i> Rumah</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#tabel-laporan"><i class="fa-solid fa-list-check me-1"></i> Laporan</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalTentang"><i class="fa-solid fa-circle-info me-1"></i> Tentang</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalKontak"><i class="fa-solid fa-address-book me-1"></i> Kontak</a></li>
                 </ul>
-                <div class="d-flex gap-2">
-                    <a href="/login-frontend/" class="btn btn-light btn-sm text-primary fw-bold">🚪 Login</a>
-                    <a href="/register-frontend/" class="btn btn-outline-light btn-sm">👤 Daftar Warga</a>
+                <div class="d-flex flex-column flex-lg-row gap-2">
+                    <a href="/login-frontend/" class="btn btn-light text-primary fw-bold px-4 shadow-sm"><i class="fa-solid fa-right-to-bracket me-1"></i> Login</a>
+                    <a href="/register-frontend/" class="btn btn-outline-light px-3"><i class="fa-solid fa-user-plus me-1"></i> Daftar Warga</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container mb-5">
+        
         {% if messages %}
             <div class="mt-3">
                 {% for message in messages %}
-                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
                         {{ message }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
@@ -66,89 +97,131 @@
             </div>
         {% endif %}
 
-        <div class="hero-section text-center">
-            <h1 class="text-primary fw-bold mb-3">Sistem Informasi Kota IET</h1>
-            <p class="lead text-muted fs-4">
+        <div class="hero-banner text-center shadow-sm">
+            <h1 class="fw-bold mb-2">Sistem Informasi Kota IET</h1>
+            <p class="lead fs-5 mb-0 px-2" style="max-width: 800px; margin: 0 auto; color: #eaee0a; font-weight: 500;">
                 Selamat Datang di Aplikasi Repositori Terpusat Penanganan Keluhan dan Pelaporan Infrastruktur Wilayah Administrasi Kabupaten Pesawaran.
             </p>
-            <hr class="my-4" style="max-width: 200px; margin: 0 auto; border: 2px solid #007bff;">
-            
-            <div class="d-grid d-md-block gap-2 mt-4">
-                <a href="/login-frontend/" class="btn btn-success btn-lg me-md-2">🔐 Masuk Menu Login</a>
-                <a href="/register-frontend/" class="btn btn-warning btn-lg">📝 Daftar Warga Baru</a>
+        </div>
+
+        <div class="row g-3 mt-2 d-lg-none">
+            <div class="col-6">
+                <a href="/login-frontend/" class="btn btn-primary w-100 py-3 shadow-sm fw-bold"><i class="fa-solid fa-right-to-bracket d-block mb-1 fs-4"></i> Masuk / Login</a>
+            </div>
+            <div class="col-6">
+                <a href="/register-frontend/" class="btn btn-success w-100 py-3 shadow-sm fw-bold"><i class="fa-solid fa-user-plus d-block mb-1 fs-4"></i> Daftar Akun</a>
             </div>
         </div>
 
-        <div id="tabel-section" class="table-container">
-            <h3 class="text-secondary mb-3">📄 Daftar Laporan Masuk</h3>
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Judul</th>
-                            <th>Lokasi</th>
-                            <th class="text-center">Status</th>
-                            <th>Alur Kerja Aksi</th>
-                            <th class="text-center">Opsi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for report in reports %}
-                        <tr>
-                            <td class="fw-bold">{{ report.title }}</td>
-                            <td>{{ report.location }}</td>
-                            <td class="text-center"><span class="badge bg-primary">Terverifikasi</span></td>
-                            <td class="text-muted">Tidak Ada Tindakan</td>
-                            <td class="text-center"><button class="btn btn-sm btn-outline-secondary">👁️</button></td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td class="fw-bold text-secondary">sampash</td>
-                            <td>sungai</td>
-                            <td class="text-center"><span class="badge bg-primary px-3 py-2">Terverifikasi</span></td>
-                            <td class="text-muted">Tidak Ada Tindakan</td>
-                            <td class="text-center"><button class="btn btn-sm btn-outline-secondary">👁️</button></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        <div class="card card-custom mt-4" id="tabel-laporan">
+            <div class="card-header bg-white py-3 border-0 d-flex align-items-center justify-content-between">
+                <h5 class="mb-0 text-dark fw-bold"><i class="fa-solid fa-clipboard-list text-primary me-2"></i>Daftar Laporan Infrastruktur Warga</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light text-secondary">
+                            <tr>
+                                <th class="ps-4">Judul Masalah</th>
+                                <th>Lokasi</th>
+                                <th class="text-center">Status</th>
+                                <th>Alur Kerja</th>
+                                <th class="text-center pe-4">Opsi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for report in reports %}
+                            <tr>
+                                <td class="ps-4 fw-bold text-dark">{{ report.title }}</td>
+                                <td><i class="fa-solid fa-location-dot text-danger me-1"></i> {{ report.location }}</td>
+                                <td class="text-center">
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">Terverifikasi</span>
+                                </td>
+                                <td class="text-muted small">Tidak Ada Tindakan</td>
+                                <td class="text-center pe-4">
+                                    <button class="btn btn-sm btn-light border"><i class="fa-solid fa-eye"></i></button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td class="ps-4 fw-bold text-dark">sampash</td>
+                                <td><i class="fa-solid fa-location-dot text-danger me-1"></i> sungai</td>
+                                <td class="text-center">
+                                    <span class="badge bg-primary text-white px-3 py-2 rounded-pill">Terverifikasi</span>
+                                </td>
+                                <td class="text-muted small">Tidak Ada Tindakan</td>
+                                <td class="text-center pe-4">
+                                    <button class="btn btn-sm btn-light border"><i class="fa-solid fa-eye"></i></button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+
     </div>
 
-    <div class="modal fade" id="modalTentang" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modalTentang" tabindex="-1" aria-labelledby="modalTentangLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content border-0 shadow">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">ℹ️ Tentang Projek Ini</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title" id="modalTentangLabel"><i class="fa-solid fa-circle-info me-2"></i>Tentang Projek Sistem</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <p class="fw-bold text-dark">Pengembangan Aplikasi Smart City Kab. Pesawaran</p>
-                    <p class="text-muted">
-                        Projek ini dirancang sebagai repositori digital terpusat untuk mendata, mengelola, serta memvalidasi laporan keluhan warga mengenai kerusakan infrastruktur publik di wilayah Kabupaten Pesawaran agar penanganan bisa terpantau secara transparan dan real-time.
+                <div class="modal-body p-4">
+                    <h6 class="fw-bold text-primary mb-2">Sistem Repositori Keluhan Masyarakat</h6>
+                    <p class="text-secondary mb-3" style="text-align: justify; line-height: 1.6;">
+                        Aplikasi ini dirancang sebagai platform pusat kendali keluhan infrastruktur wilayah Kabupaten Pesawaran. Dikembangkan khusus untuk membantu proses pengumpulan data, validasi masalah di lapangan, serta mempercepat distribusi informasi penanganan fasilitas publik agar berjalan transparan dan real-time.
                     </p>
-                    <hr>
-                    <p class="small text-secondary">Dikembangkan oleh: <strong>Ikrom Safei (NPM: 24782076)</strong></p>
+                    <div class="p-3 bg-light rounded-3 border-start border-primary border-3">
+                        <small class="text-muted d-block">Pengembang Aplikasi:</small>
+                        <strong class="text-dark">Ikrom Safei</strong> <span class="text-secondary">(NPM: 24782076)</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="modalKontak" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modalKontak" tabindex="-1" aria-labelledby="modalKontakLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content border-0 shadow">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">📞 Kontak Pengembang</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title" id="modalKontakLabel"><i class="fa-solid fa-address-book me-2"></i>Kontak Resmi Pengembang</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><strong>Nomor WA:</strong> 088274262106</li>
-                        <li class="list-group-item"><strong>Nomor Telpon:</strong> 088274262106</li>
-                        <li class="list-group-item"><strong>Email:</strong> ikromsafei0@gmail.com</li>
-                        <li class="list-group-item"><strong>Instansi:</strong> TRI Politeknik Negeri Lampung</li>
-                    </ul>
+                <div class="modal-body p-0">
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item p-3 d-flex align-items-center gap-3">
+                            <div class="bg-success-subtle text-success p-2 rounded-3"><i class="fa-brands fa-whatsapp fs-4"></i></div>
+                            <div>
+                                <small class="text-muted d-block">WhatsApp</small>
+                                <strong class="text-dark">088274262106</strong>
+                            </div>
+                        </div>
+                        <div class="list-group-item p-3 d-flex align-items-center gap-3">
+                            <div class="bg-primary-subtle text-primary p-2 rounded-3"><i class="fa-solid fa-phone fs-4"></i></div>
+                            <div>
+                                <small class="text-muted d-block">Nomor Telepon</small>
+                                <strong class="text-dark">088274262106</strong>
+                            </div>
+                        </div>
+                        <div class="list-group-item p-3 d-flex align-items-center gap-3">
+                            <div class="bg-danger-subtle text-danger p-2 rounded-3"><i class="fa-solid fa-envelope fs-4"></i></div>
+                            <div>
+                                <small class="text-muted d-block">Email Mahasiswa</small>
+                                <strong class="text-dark">ikromsafei0@gmail.com</strong>
+                            </div>
+                        </div>
+                        <div class="list-group-item p-3 d-flex align-items-center gap-3">
+                            <div class="bg-secondary-subtle text-secondary p-2 rounded-3"><i class="fa-solid fa-graduation-cap fs-4"></i></div>
+                            <div>
+                                <small class="text-muted d-block">Instansi Kampus</small>
+                                <strong class="text-dark">TRI Politeknik Negeri Lampung</strong>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
