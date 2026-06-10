@@ -159,7 +159,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <form action="{% url 'login_frontend' %}" method="POST" class="modal-body p-4">
-                    {% csrf_block %}{% csrf_token %}
+                    {% csrf_token %}
                     <div class="mb-3">
                         <label class="form-label fw-bold">Username</label>
                         <input type="text" name="username" class="form-control" placeholder="Masukkan username" required>
@@ -182,7 +182,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <form action="{% url 'register_frontend' %}" method="POST" class="modal-body p-4">
-                    {% csrf_block %}{% csrf_token %}
+                    {% csrf_token %}
                     <div class="mb-3">
                         <label class="form-label fw-bold">Username Baru</label>
                         <input type="text" name="username" class="form-control" placeholder="Buat nama pengguna" required>
@@ -193,7 +193,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-bold">Password Keamanan</label>
-                        <input type="password" name="password" class="form-control" placeholder="Buat kata sandi minimal 6 karakter" required>
+                        <input type="password" name="password" class="form-control" placeholder="Buat kata sandi" required>
                     </div>
                     <button type="submit" class="btn btn-success w-100 py-2 fw-bold mt-2">Daftar Sebagai Warga</button>
                 </form>
@@ -227,7 +227,7 @@
             <div class="modal-content border-0 shadow">
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title"><i class="fa-solid fa-address-book me-2"></i>Kontak Resmi Pengembang</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-modal="hide" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-0">
                     <div class="list-group list-group-flush">
