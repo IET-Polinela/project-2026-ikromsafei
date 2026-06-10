@@ -9,12 +9,17 @@ from main_app.models import Report
 from usermanagement.api_views import RegisterView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+# 1. Konfigurasi Router untuk REST API Kelompokmu
 router = DefaultRouter()
 router.register(r'report', ReportViewSet, basename='report')
 
 User = get_user_model()
 
-# View Utama Landing Page
+# ========================================================
+# FUNGSI VIEW UTAMA (LOGIKA BACKEND)
+# ========================================================
+
+# View Utama Landing Page (Menampilkan Tabel Keluhan)
 def backend_landing_page(request):
     reports_data = Report.objects.all().order_by('-id')
     return render(request, 'backend_home.html', {'reports': reports_data})
@@ -68,12 +73,21 @@ def logout_frontend_view(request):
     messages.info(request, 'Sesi Anda telah berakhir.')
     return redirect('backend_home_root')
 
+
+# ========================================================
+# URL PATTERNS (RUTE JALUR APLIKASI KOTA IET)
+# ========================================================
 urlpatterns = [
+    # Jalur Tampilan Depan & Otentikasi yang Sinkron dengan HTML Modal
     path('', backend_landing_page, name='backend_home_root'), 
     path('login-frontend/', login_frontend_view, name='login_frontend'),
     path('register-frontend/', register_frontend_view, name='register_frontend'),
     path('logout-frontend/', logout_frontend_view, name='logout_frontend'),
+    
+    # Jalur Admin Panel Django Bawaan Server
     path('admin/', admin.site.urls),
+    
+    # Jalur API (Endpoint untuk kebutuhan djangorestframework)
     path('api/', include(router.urls)),
     path('api/register/', RegisterView.as_view(), name='api_register'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
