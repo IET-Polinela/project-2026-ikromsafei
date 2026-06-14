@@ -3,6 +3,7 @@ from django.urls import path, include
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib import messages
+from django.db.models import Q
 from rest_framework.routers import DefaultRouter
 from main_app.api_views import ReportViewSet
 from main_app.models import Report
@@ -15,28 +16,34 @@ router.register(r'report', ReportViewSet, basename='report')
 User = get_user_model()
 
 # ========================================================
-# VIEWS FRONTEND - FIX FILTER BERDASARKAN KOLOM 'REPORTER'
+# VIEWS FRONTEND - SINKRONISASI FILTER DAN HAK AKSES DRAFT
 # ========================================================
 
 def backend_landing_page(request):
     if request.user.is_authenticated:
         if request.user.is_staff or request.user.is_superuser:
-            # Admin melihat semua data keluhan dari seluruh warga
-            reports_data = Report.objects.all().order_by('-id')
-            total_laporan = Report.objects.count()
+            # 1. Admin melihat semua keluhan, KECUALI DRAFT
+            reports_data = Report.objects.exclude(status__iexact='draft').order_by('-id')
+            total_laporan = reports_data.count()
+            
+            # Hitung data statistik (Draft diabaikan/set ke 0 untuk Admin)
             jumlah_reported = Report.objects.filter(status__iexact='REPORTED').count()
             jumlah_in_progress = Report.objects.filter(status__iexact='IN_PROGRESS').count()
             jumlah_verified = Report.objects.filter(status__iexact='VERIFIED').count()
             jumlah_resolved = Report.objects.filter(status__iexact='RESOLVED').count()
-            jumlah_draft = Report.objects.filter(status__iexact='draft').count()
+            jumlah_draft = 0 
         else:
-            # Warga/Client hanya melihat aduan miliknya sendiri (Menggunakan kolom reporter)
-            reports_data = Report.objects.filter(reporter=request.user).order_by('-id')
-            total_laporan = Report.objects.filter(reporter=request.user).count()
-            jumlah_reported = Report.objects.filter(reporter=request.user, status__iexact='REPORTED').count()
-            jumlah_in_progress = Report.objects.filter(reporter=request.user, status__iexact='IN_PROGRESS').count()
-            jumlah_verified = Report.objects.filter(reporter=request.user, status__iexact='VERIFIED').count()
-            jumlah_resolved = Report.objects.filter(reporter=request.user, status__iexact='RESOLVED').count()
+            # 2. Warga melihat semua laporan publik, PLUS draft milik dia sendiri
+            reports_data = Report.objects.filter(
+                Q(reporter=request.user) | ~Q(status__iexact='draft')
+            ).order_by('-id')
+            total_laporan = reports_data.count()
+            
+            # Hitung data statistik warga (termasuk draft milik dia pribadi)
+            jumlah_reported = Report.objects.filter(status__iexact='REPORTED').count()
+            jumlah_in_progress = Report.objects.filter(status__iexact='IN_PROGRESS').count()
+            jumlah_verified = Report.objects.filter(status__iexact='VERIFIED').count()
+            jumlah_resolved = Report.objects.filter(status__iexact='RESOLVED').count()
             jumlah_draft = Report.objects.filter(reporter=request.user, status__iexact='draft').count()
     else:
         reports_data = []
@@ -98,7 +105,7 @@ def tambah_laporan_frontend(request):
             s = 'REPORTED'
             
         try:
-            # FIX UTAMA: Menggunakan kolom reporter=request.user agar sinkron dengan database asli
+            # Query valid menggunakan reporter=request.user
             Report.objects.create(title=t, location=l, status=s, reporter=request.user)
             messages.success(request, 'Laporan aduan baru berhasil disimpan ke sistem!')
         except Exception as e:
