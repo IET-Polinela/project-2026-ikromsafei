@@ -12,7 +12,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .navbar-custom {
-            background-color: #0056b3; 
+            background-color: #135d37; /* Diubah jadi Hijau sesuai desain portal login kamu */
             padding: 15px 0;
         }
         .navbar-custom .navbar-brand {
@@ -24,7 +24,7 @@
             font-weight: 500;
         }
         .hero-banner {
-            background: linear-gradient(135deg, #0056b3 0%, #007bff 100%);
+            background: linear-gradient(135deg, #135d37 0%, #198754 100%); /* Tema Hijau Harmoni Perkotaan */
             color: white;
             padding: 40px 20px;
             border-radius: 15px;
@@ -54,13 +54,13 @@
                     <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalTentang">ℹ️ Tentang</a></li>
                     <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalKontak">📞 Kontak</a></li>
                 </ul>
-                <div class="d-none d-lg-flex gap-2">
+                <div class="d-none d-lg-flex gap-2 align-items-center">
                     {% if user.is_authenticated %}
-                        <span class="navbar-text text-white me-2">Halo, <strong>{{ user.username }}</strong></span>
+                        <span class="text-white me-2">Halo, <strong>{{ user.username }}</strong></span>
                         <a href="{% url 'logout_frontend' %}" class="btn btn-danger btn-sm px-3">Log Out</a>
                     {% else %}
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalLogin" class="btn btn-light text-primary fw-bold px-4 shadow-sm">Login</a>
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalRegister" class="btn btn-outline-light px-3">Daftar Warga</a>
+                        <a href="{% url 'login_frontend' %}" class="btn btn-light text-success fw-bold px-4 shadow-sm">Login</a>
+                        <a href="{% url 'register_frontend' %}" class="btn btn-outline-light px-3">Daftar</a>
                     {% endif %}
                 </div>
             </div>
@@ -82,32 +82,46 @@
 
         <div class="hero-banner text-center shadow-sm">
             <h1 class="fw-bold mb-2">Sistem Informasi Kota IET</h1>
-            <p class="lead fs-5 mb-0 px-2" style="max-width: 800px; margin: 0 auto; color: #eaee0a; font-weight: 500;">
+            <p class="subtitle mb-2 small text-warning text-uppercase fw-bold" style="letter-spacing: 1px;">Kehidupan Cerdas, Harmoni Perkotaan</p>
+            <p class="lead fs-5 mb-0 px-2" style="max-width: 800px; margin: 0 auto; color: #ffffff; font-weight: 500;">
                 Selamat Datang di Aplikasi Repositori Terpusat Penanganan Keluhan dan Pelaporan Infrastruktur Wilayah Administrasi Kabupaten Pesawaran.
             </p>
         </div>
 
-        {% if not user.is_authenticated %}
-        <div class="mt-4 d-lg-none">
-            <div style="display: flex; gap: 15px; width: 100%;">
-                <a href="#" data-bs-toggle="modal" data-bs-target="#modalLogin" style="flex: 1; text-align: center; background-color: #007bff; color: white; text-decoration: none; padding: 18px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: block;">
-                    <i class="fa-solid fa-right-to-bracket me-2"></i> Masuk / Login
-                </a>
-                <a href="#" data-bs-toggle="modal" data-bs-target="#modalRegister" style="flex: 1; text-align: center; background-color: #198754; color: white; text-decoration: none; padding: 18px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: block;">
-                    <i class="fa-solid fa-user-plus me-2"></i> Daftar Akun
-                </a>
-            </div>
+        <div class="mt-4">
+            {% if user.is_authenticated %}
+                <div class="p-3 bg-white rounded shadow-sm d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div>
+                        <span>Status Login: <strong>{{ user.username }}</strong> 
+                        {% if user.is_staff or user.is_superuser %}
+                            <span class="badge bg-danger ms-1">Otoritas Admin</span>
+                        {% else %}
+                            <span class="badge bg-success ms-1">Akses Warga/Client</span>
+                        {% endif %}
+                        </span>
+                    </div>
+                    {% if not user.is_staff and not user.is_superuser %}
+                        <button class="btn btn-success fw-bold btn-sm shadow-sm" data-bs-toggle="modal" data-bs-target="#modalTambahLaporan">
+                            <i class="fa-solid fa-plus me-1"></i> Buat Laporan Baru
+                        </button>
+                    {% endif %}
+                    <a href="{% url 'logout_frontend' %}" class="btn btn-outline-danger btn-sm d-lg-none">Log Out</a>
+                </div>
+            {% else %}
+                <div class="d-lg-none" style="display: flex; gap: 15px; width: 100%;">
+                    <a href="{% url 'login_frontend' %}" style="flex: 1; text-align: center; background-color: #135d37; color: white; text-decoration: none; padding: 18px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; display: block; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        <i class="fa-solid fa-right-to-bracket me-2"></i> Masuk / Login
+                    </a>
+                    <a href="{% url 'register_frontend' %}" style="flex: 1; text-align: center; background-color: #198754; color: white; text-decoration: none; padding: 18px; border-radius: 12px; font-weight: bold; font-size: 1.1rem; display: block; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        <i class="fa-solid fa-user-plus me-2"></i> Daftar Akun
+                    </a>
+                </div>
+            {% endif %}
         </div>
-        {% else %}
-        <div class="mt-4 d-lg-none text-center p-3 bg-white rounded shadow-sm">
-            <p class="mb-2">Anda masuk sebagai: <strong>{{ user.username }}</strong></p>
-            <a href="{% url 'logout_frontend' %}" class="btn btn-danger w-100">Keluar / Log Out</a>
-        </div>
-        {% endif %}
 
         <div class="card card-custom mt-4" id="tabel-laporan">
             <div class="card-header bg-white py-3 border-0">
-                <h5 class="mb-0 text-dark fw-bold"><i class="fa-solid fa-clipboard-list text-primary me-2"></i>Daftar Laporan Infrastruktur Warga</h5>
+                <h5 class="mb-0 text-dark fw-bold"><i class="fa-solid fa-clipboard-list text-success me-2"></i>Daftar Laporan Infrastruktur Warga</h5>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -118,7 +132,7 @@
                                 <th>Lokasi</th>
                                 <th class="text-center">Status</th>
                                 <th>Alur Kerja</th>
-                                <th class="text-center pe-4">Opsi</th>
+                                <th class="text-center pe-4" style="width: 180px;">Opsi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -127,11 +141,25 @@
                                 <td class="ps-4 fw-bold text-dark">{{ report.title }}</td>
                                 <td><i class="fa-solid fa-location-dot text-danger me-1"></i> {{ report.location }}</td>
                                 <td class="text-center">
-                                    <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Terverifikasi</span>
+                                    {% if report.status|lower == 'draft' %}
+                                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">Draft</span>
+                                    {% else %}
+                                        <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Terverifikasi</span>
+                                    {% endif %}
                                 </td>
                                 <td class="text-muted small">Tidak Ada Tindakan</td>
                                 <td class="text-center pe-4">
-                                    <button class="btn btn-sm btn-light border"><i class="fa-solid fa-eye"></i></button>
+                                    <div class="btn-group gap-1">
+                                        <button class="btn btn-sm btn-light border" title="Lihat"><i class="fa-solid fa-eye"></i></button>
+                                        {% if user.is_staff or user.is_superuser %}
+                                            {% if report.status|lower != 'draft' %}
+                                                <button class="btn btn-sm btn-warning border text-white" title="Admin Edit"><i class="fa-solid fa-pen-to-square"></i></button>
+                                                <button class="btn btn-sm btn-danger border" title="Admin Hapus"><i class="fa-solid fa-trash"></i></button>
+                                            {% else %}
+                                                <button class="btn btn-sm btn-light border text-muted" disabled title="Terkunci (Status Draft)"><i class="fa-solid fa-lock"></i></button>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
                                 </td>
                             </tr>
                             {% empty %}
@@ -140,7 +168,15 @@
                                 <td><i class="fa-solid fa-location-dot text-danger me-1"></i> natar</td>
                                 <td class="text-center"><span class="badge bg-success text-white px-3 py-2 rounded-pill">Terverifikasi</span></td>
                                 <td class="text-muted small">Tidak Ada Tindakan</td>
-                                <td class="text-center pe-4"><button class="btn btn-sm btn-light border"><i class="fa-solid fa-eye"></i></button></td>
+                                <td class="text-center pe-4">
+                                    <div class="btn-group gap-1">
+                                        <button class="btn btn-sm btn-light border"><i class="fa-solid fa-eye"></i></button>
+                                        {% if user.is_staff or user.is_superuser %}
+                                            <button class="btn btn-sm btn-warning text-white"><i class="fa-solid fa-pen-to-square"></i></button>
+                                            <button class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
+                                        {% endif %}
+                                    </div>
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -151,51 +187,31 @@
 
     </div>
 
-    <div class="modal fade" id="modalLogin" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title"><i class="fa-solid fa-right-to-bracket me-2"></i>Form Masuk Sistem</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <form action="{% url 'login_frontend' %}" method="POST" class="modal-body p-4">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Username</label>
-                        <input type="text" name="username" class="form-control" placeholder="Masukkan username" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Password</label>
-                        <input type="password" name="password" class="form-control" placeholder="Masukkan password" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold mt-2">Masuk Sekarang</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="modalRegister" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modalTambahLaporan" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow">
                 <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title"><i class="fa-solid fa-user-plus me-2"></i>Pendaftaran Akun Warga Baru</h5>
+                    <h5 class="modal-title"><i class="fa-solid fa-file-medical me-2"></i>Buat Laporan Baru</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <form action="{% url 'register_frontend' %}" method="POST" class="modal-body p-4">
+                <form action="/api/report/" method="POST" class="modal-body p-4">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Username Baru</label>
-                        <input type="text" name="username" class="form-control" placeholder="Buat nama pengguna" required>
+                        <label class="form-label fw-bold">Judul Masalah</label>
+                        <input type="text" name="title" class="form-control" placeholder="Contoh: Jalan Berlubang Parah" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Alamat Email</label>
-                        <input type="email" name="email" class="form-control" placeholder="contoh@gmail.com" required>
+                        <label class="form-label fw-bold">Lokasi Kejadian</label>
+                        <input type="text" name="location" class="form-control" placeholder="Contoh: Hanura, Gedong Tataan" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Password Keamanan</label>
-                        <input type="password" name="password" class="form-control" placeholder="Buat kata sandi" required>
+                        <label class="form-label fw-bold">Status Laporan awal</label>
+                        <select name="status" class="form-select">
+                            <option value="Terverifikasi">Kirim Langsung (Terverifikasi)</option>
+                            <option value="draft">Simpan Sebagai Draft</option>
+                        </select>
                     </div>
-                    <button type="submit" class="btn btn-success w-100 py-2 fw-bold mt-2">Daftar Sebagai Warga</button>
+                    <button type="submit" class="btn btn-success w-100 py-2 fw-bold mt-2">Kirim Laporan Keluhan</button>
                 </form>
             </div>
         </div>
@@ -204,16 +220,16 @@
     <div class="modal fade" id="modalTentang" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow">
-                <div class="modal-header bg-primary text-white">
+                <div class="modal-header bg-success text-white">
                     <h5 class="modal-title"><i class="fa-solid fa-circle-info me-2"></i>Tentang Projek Sistem</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <h6 class="fw-bold text-primary mb-2">Sistem Repositori Keluhan Masyarakat</h6>
+                    <h6 class="fw-bold text-success mb-2">Sistem Repositori Keluhan Masyarakat</h6>
                     <p class="text-secondary mb-3" style="text-align: justify;">
                         Aplikasi ini dirancang sebagai platform pusat kendali keluhan infrastruktur wilayah Kabupaten Pesawaran. Dikembangkan khusus untuk membantu proses pengumpulan data, validasi masalah di lapangan, serta mempercepat distribusi informasi penanganan fasilitas publik agar berjalan transparan dan real-time.
                     </p>
-                    <div class="p-3 bg-light rounded-3 border-start border-primary border-3">
+                    <div class="p-3 bg-light rounded-3 border-start border-success border-3">
                         <small class="text-muted d-block">Pengembang Aplikasi:</small>
                         <strong class="text-dark">Ikrom Safei</strong> <span class="text-secondary">(NPM: 24782076)</span>
                     </div>
@@ -225,9 +241,9 @@
     <div class="modal fade" id="modalKontak" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow">
-                <div class="modal-header bg-primary text-white">
+                <div class="modal-header bg-success text-white">
                     <h5 class="modal-title"><i class="fa-solid fa-address-book me-2"></i>Kontak Resmi Pengembang</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-modal="hide" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-0">
                     <div class="list-group list-group-flush">
