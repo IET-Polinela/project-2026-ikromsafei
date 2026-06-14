@@ -89,7 +89,7 @@
             font-size: 0.85rem;
         }
 
-        /* DASHBOARD INDIKATOR STATISTIK */
+        /* ROW INDIKATOR STATISTIK SINKRON */
         .dash-card {
             background: #ffffff;
             border-radius: 16px;
@@ -99,6 +99,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            height: 100%;
         }
         .icon-shape {
             width: 44px;
@@ -111,16 +112,15 @@
             flex-shrink: 0;
         }
         
-        /* THEME WARNA INDIKATOR CARD */
         .bg-card-total { background-color: #e3edff; color: #0052cc; }
-        .bg-card-proses { background-color: #f0f4f8; color: #627d98; }
-        .bg-card-sedang { background-color: #e0f7fa; color: #00838f; }
-        .bg-card-jalan { background-color: #e8eaf6; color: #3f51b5; }
-        .bg-card-selesai { background-color: #e6f6ec; color: #155724; }
+        .bg-card-reported { background-color: #f0f4f8; color: #627d98; }
+        .bg-card-progress { background-color: #e0f7fa; color: #00838f; }
+        .bg-card-verified { background-color: #e8eaf6; color: #3f51b5; }
+        .bg-card-resolved { background-color: #e6f6ec; color: #155724; }
         .bg-card-draft { background-color: #fff3cd; color: #856404; }
 
         .card-custom { border: none; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); background: #ffffff; }
-        footer { text-align: center; padding: 25px 0; color: #627d98; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.05); mgt-auto; }
+        footer { text-align: center; padding: 25px 0; color: #627d98; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
@@ -195,8 +195,8 @@
     {% else %}
     <div class="container my-4 mb-5">
         
-        <div class="row g-3 mb-4">
-            <div class="col-md-4 col-lg-2">
+        <div class="row g-3 mb-4 justify-content-center">
+            <div class="col-6 col-sm-4 col-md-2">
                 <div class="dash-card">
                     <div class="icon-shape bg-card-total"><i class="fa-solid fa-layer-group"></i></div>
                     <div>
@@ -205,43 +205,45 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 col-lg-2">
+            <div class="col-6 col-sm-4 col-md-2">
                 <div class="dash-card">
-                    <div class="icon-shape bg-card-proses"><i class="fa-solid fa-spinner"></i></div>
+                    <div class="icon-shape bg-card-reported"><i class="fa-solid fa-bullhorn"></i></div>
                     <div>
-                        <small class="text-muted d-block fw-bold" style="font-size: 0.65rem;">DIPROSES</small>
-                        <h5 class="fw-bold text-secondary mb-0">{{ jumlah_diproses }}</h5>
+                        <small class="text-muted d-block fw-bold" style="font-size: 0.65rem;">REPORTED</small>
+                        <h5 class="fw-bold text-secondary mb-0">{{ jumlah_reported }}</h5>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 col-lg-2">
+            <div class="col-6 col-sm-4 col-md-2">
                 <div class="dash-card">
-                    <div class="icon-shape bg-card-sedang"><i class="fa-solid fa-hourglass-half"></i></div>
+                    <div class="icon-shape bg-card-progress"><i class="fa-solid fa-spinner"></i></div>
                     <div>
-                        <small class="text-muted d-block fw-bold" style="font-size: 0.65rem;">SDG PROSES</small>
-                        <h5 class="fw-bold text-info mb-0">{{ jumlah_sedang_diproses }}</h5>
+                        <small class="text-muted d-block fw-bold" style="font-size: 0.65rem;">IN PROGRESS</small>
+                        <h5 class="fw-bold text-info mb-0">{{ jumlah_in_progress }}</h5>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 col-lg-2">
+            <div class="col-6 col-sm-4 col-md-2">
                 <div class="dash-card">
-                    <div class="icon-shape bg-card-jalan"><i class="fa-solid fa-person-digging"></i></div>
+                    <div class="icon-shape bg-card-verified"><i class="fa-solid fa-circle-check"></i></div>
                     <div>
-                        <small class="text-muted d-block fw-bold" style="font-size: 0.65rem;">DILAKSANAKAN</small>
-                        <h5 class="fw-bold text-primary mb-0">{{ jumlah_sedang_dilaksanakan }}</h5>
+                        <small class="text-muted d-block fw-bold" style="font-size: 0.65rem;">VERIFIED</small>
+                        <h5 class="fw-bold text-primary mb-0">{{ jumlah_verified }}</h5>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 col-lg-2">
+            <div class="col-6 col-sm-4 col-md-2">
                 <div class="dash-card">
-                    <div class="icon-shape bg-card-selesai"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="icon-shape bg-card-resolved"><i class="fa-solid fa-check-double"></i></div>
                     <div>
-                        <small class="text-muted d-block fw-bold" style="font-size: 0.65rem;">SELESAI</small>
-                        <h5 class="fw-bold text-success mb-0">{{ jumlah_selesai }}</h5>
+                        <small class="text-muted d-block fw-bold" style="font-size: 0.65rem;">RESOLVED</small>
+                        <h5 class="fw-bold text-success mb-0">{{ jumlah_resolved }}</h5>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 col-lg-2">
+            
+            {% if not user.is_staff and not user.is_superuser %}
+            <div class="col-6 col-sm-4 col-md-2">
                 <div class="dash-card">
                     <div class="icon-shape bg-card-draft"><i class="fa-solid fa-file-lines"></i></div>
                     <div>
@@ -250,6 +252,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
         </div>
 
         <div class="card card-custom p-3 border mb-4">
@@ -286,16 +289,16 @@
                                 <td class="ps-4 fw-bold text-dark">{{ report.title }}</td>
                                 <td><i class="fa-solid fa-location-dot text-danger me-1"></i> {{ report.location }}</td>
                                 <td class="text-center">
-                                    {% if report.status|lower == 'draft' %}
+                                    {% if report.status|upper == 'DRAFT' %}
                                         <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">Draft</span>
-                                    {% elif report.status|lower == 'diproses' %}
-                                        <span class="badge bg-secondary text-white px-3 py-2 rounded-pill">Diproses</span>
-                                    {% elif report.status|lower == 'sedang diproses' %}
-                                        <span class="badge bg-info text-dark px-3 py-2 rounded-pill">Sedang Diproses</span>
-                                    {% elif report.status|lower == 'sedang dilaksanakan' %}
-                                        <span class="badge bg-primary text-white px-3 py-2 rounded-pill">Sedang Dilaksanakan</span>
-                                    {% elif report.status|lower == 'selesai' %}
-                                        <span class="badge bg-success text-white px-3 py-2 rounded-pill">Selesai</span>
+                                    {% elif report.status|upper == 'REPORTED' %}
+                                        <span class="badge bg-secondary text-white px-3 py-2 rounded-pill">REPORTED</span>
+                                    {% elif report.status|upper == 'IN_PROGRESS' %}
+                                        <span class="badge bg-info text-dark px-3 py-2 rounded-pill">IN_PROGRESS</span>
+                                    {% elif report.status|upper == 'VERIFIED' %}
+                                        <span class="badge bg-primary text-white px-3 py-2 rounded-pill">VERIFIED</span>
+                                    {% elif report.status|upper == 'RESOLVED' %}
+                                        <span class="badge bg-success text-white px-3 py-2 rounded-pill">RESOLVED</span>
                                     {% else %}
                                         <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">{{ report.status }}</span>
                                     {% endif %}
@@ -305,7 +308,7 @@
                                         <button class="btn btn-sm btn-light border" title="Lihat"><i class="fa-solid fa-eye"></i></button>
                                         {% if user.is_staff or user.is_superuser %}
                                             <button class="btn btn-sm btn-warning border text-white" data-bs-toggle="modal" data-bs-target="#modalEditStatus{{ report.id }}" title="Ubah Status"><i class="fa-solid fa-pencil"></i></button>
-                                            <a href="{% url 'hapus_laporan_frontend' report.id %}" class="btn btn-sm btn-danger border" onclick="return confirm('Apakah Anda yakin ingin menghapus aduan ini, Krom?')" title="Hapus"><i class="fa-solid fa-trash"></i></a>
+                                            <a href="{% url 'hapus_laporan_frontend' report.id %}" class="btn btn-sm btn-danger border" onclick="return confirm('Apakah Anda yakin ingin menghapus aduan ini?')" title="Hapus"><i class="fa-solid fa-trash"></i></a>
                                         {% endif %}
                                     </div>
                                 </td>
@@ -322,37 +325,37 @@
 
     {% if user.is_staff or user.is_superuser %}
         {% for report in reports %}
-        <div class="modal fade" id="modalEditStatus{{ report.id }}" tabindex="-1" aria-labelledby="editLabel{{ report.id }}" aria-hidden="true">
+        <div class="modal fade" id="modalEditStatus{{ report.id }}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <form action="{% url 'ubah_laporan_frontend' report.id %}" method="POST" class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
                     {% csrf_token %}
                     <div class="modal-header bg-warning text-white py-3 rounded-top-3">
-                        <h5 class="modal-title fw-bold" id="editLabel{{ report.id }}"><i class="fa-solid fa-pen-to-square me-2"></i>Pembaruan Progres Keluhan #{{ report.id }}</h5>
+                        <h5 class="modal-title fw-bold"><i class="fa-solid fa-pen-to-square me-2"></i>Ubah Status #{{ report.id }}</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body p-4">
                         <div class="mb-3">
-                            <label class="text-muted small d-block">Judul Aduan</label>
-                            <span class="fw-bold text-dark fs-6">{{ report.title }}</span>
+                            <label class="text-muted small d-block">Judul Laporan</label>
+                            <span class="fw-bold text-dark">{{ report.title }}</span>
                         </div>
                         <div class="mb-3">
-                            <label class="text-muted small d-block">Lokasi Kejadian</label>
+                            <label class="text-muted small d-block">Lokasi</label>
                             <span class="fw-medium text-secondary"><i class="fa-solid fa-location-dot text-danger me-1"></i>{{ report.location }}</span>
                         </div>
-                        <hr class="text-muted opacity-25">
+                        <hr class="opacity-25">
                         <div class="mb-2">
-                            <label class="form-label fw-bold text-dark">Ubah Kedudukan Status:</label>
+                            <label class="form-label fw-bold text-dark">Pilih Progres Kerja Database:</label>
                             <select name="status" class="form-select form-control-custom">
-                                <option value="Diproses" {% if report.status == 'Diproses' %}selected{% endif %}>Diproses</option>
-                                <option value="Sedang Diproses" {% if report.status == 'Sedang Diproses' %}selected{% endif %}>Sedang Diproses</option>
-                                <option value="Sedang Dilaksanakan" {% if report.status == 'Sedang Dilaksanakan' %}selected{% endif %}>Sedang Dilaksanakan</option>
-                                <option value="Selesai" {% if report.status == 'Selesai' %}selected{% endif %}>Selesai</option>
+                                <option value="REPORTED" {% if report.status|upper == 'REPORTED' %}selected{% endif %}>REPORTED</option>
+                                <option value="IN_PROGRESS" {% if report.status|upper == 'IN_PROGRESS' %}selected{% endif %}>IN_PROGRESS</option>
+                                <option value="VERIFIED" {% if report.status|upper == 'VERIFIED' %}selected{% endif %}>VERIFIED</option>
+                                <option value="RESOLVED" {% if report.status|upper == 'RESOLVED' %}selected{% endif %}>RESOLVED</option>
                             </select>
                         </div>
                     </div>
                     <div class="modal-footer bg-light border-0 rounded-bottom-3">
-                        <button type="button" class="btn btn-light border fw-semibold rounded-3" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-warning text-white fw-bold px-4 rounded-3 shadow-sm">Simpan Pembaruan</button>
+                        <button type="button" class="btn btn-light border fw-semibold" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-warning text-white fw-bold px-4">Update Status</button>
                     </div>
                 </form>
             </div>
@@ -390,11 +393,11 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalTambahLaporan" tabindex="-1" aria-labelledby="tambahLabel" aria-hidden="true">
+    <div class="modal fade" id="modalTambahLaporan" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
                 <div class="modal-header bg-primary text-white py-3 rounded-top-4">
-                    <h5 class="modal-title fw-bold" id="tambahLabel"><i class="fa-solid fa-file-medical me-2"></i>Buat Aduan Keluhan Baru</h5>
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-file-medical me-2"></i>Buat Aduan Keluhan Baru</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form action="{% url 'tambah_laporan_frontend' %}" method="POST" class="modal-body p-4">
@@ -410,7 +413,7 @@
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Opsi Pengiriman Laporan</label>
                         <select name="status" class="form-select form-control-custom">
-                            <option value="Diproses">Kirim Langsung (Diproses)</option>
+                            <option value="REPORTED">Kirim Langsung (REPORTED)</option>
                             <option value="draft">Simpan Sebagai Draft</option>
                         </select>
                     </div>

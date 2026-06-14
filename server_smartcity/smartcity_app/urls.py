@@ -15,28 +15,27 @@ router.register(r'report', ReportViewSet, basename='report')
 User = get_user_model()
 
 # ========================================================
-# VIEWS FRONTEND - STATISTIK REAL-TIME & AKURAT
+# VIEWS FRONTEND - COUNTER DATA BERDASARKAN BAHASA INGGRIS DATABASE
 # ========================================================
 
 def backend_landing_page(request):
-    # Mengambil semua laporan untuk ditampilkan di tabel
     reports_data = Report.objects.all().order_by('-id')
     
-    # Hitung jumlah berdasarkan status secara dinamis dari database
+    # Hitung jumlah berdasarkan status asli di database kelompokmu
     total_laporan = Report.objects.count()
-    jumlah_diproses = Report.objects.filter(status__iexact='Diproses').count()
-    jumlah_sedang_diproses = Report.objects.filter(status__iexact='Sedang Diproses').count()
-    jumlah_sedang_dilaksanakan = Report.objects.filter(status__iexact='Sedang Dilaksanakan').count()
-    jumlah_selesai = Report.objects.filter(status__iexact='Selesai').count()
+    jumlah_reported = Report.objects.filter(status__iexact='REPORTED').count()
+    jumlah_in_progress = Report.objects.filter(status__iexact='IN_PROGRESS').count()
+    jumlah_verified = Report.objects.filter(status__iexact='VERIFIED').count()
+    jumlah_resolved = Report.objects.filter(status__iexact='RESOLVED').count()
     jumlah_draft = Report.objects.filter(status__iexact='draft').count()
 
     konteks = {
         'reports': reports_data,
         'total_laporan': total_laporan,
-        'jumlah_diproses': jumlah_diproses,
-        'jumlah_sedang_diproses': jumlah_sedang_diproses,
-        'jumlah_sedang_dilaksanakan': jumlah_sedang_dilaksanakan,
-        'jumlah_selesai': jumlah_selesai,
+        'jumlah_reported': jumlah_reported,
+        'jumlah_in_progress': jumlah_in_progress,
+        'jumlah_verified': jumlah_verified,
+        'jumlah_resolved': jumlah_resolved,
         'jumlah_draft': jumlah_draft,
     }
     return render(request, 'backend_home.html', konteks)
@@ -76,14 +75,18 @@ def logout_frontend_view(request):
     messages.info(request, 'Sesi Anda telah berakhir.')
     return redirect('backend_home_root')
 
+# FIX FIX: Perbaikan query ORM agar menggunakan field model 'user' yang benar
 def tambah_laporan_frontend(request):
     if request.method == 'POST' and request.user.is_authenticated:
         t = request.POST.get('title')
         l = request.POST.get('location')
-        s = request.POST.get('status', 'Diproses')
+        s = request.POST.get('status', 'REPORTED')
         
-        Report.objects.create(title=t, location=l, status=s, user=request.user)
-        messages.success(request, 'Laporan baru berhasil disimpan ke sistem!')
+        try:
+            Report.objects.create(title=t, location=l, status=s, user=request.user)
+            messages.success(request, 'Laporan baru berhasil disimpan ke sistem!')
+        except Exception as e:
+            messages.error(request, f'Gagal menyimpan laporan: {str(e)}')
     return redirect('backend_home_root')
 
 def ubah_laporan_frontend(request, pk):
