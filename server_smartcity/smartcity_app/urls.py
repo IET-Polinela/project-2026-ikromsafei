@@ -15,13 +15,13 @@ router.register(r'report', ReportViewSet, basename='report')
 User = get_user_model()
 
 # ========================================================
-# VIEWS FRONTEND - COUNTER DATA BERDASARKAN BAHASA INGGRIS DATABASE
+# VIEWS FRONTEND - SINKRONISASI COCOUNTERS & STATISTIK 
 # ========================================================
 
 def backend_landing_page(request):
     reports_data = Report.objects.all().order_by('-id')
     
-    # Hitung jumlah berdasarkan status asli di database kelompokmu
+    # Hitung data asli real-time dari database kelompokmu (Bahasa Inggris)
     total_laporan = Report.objects.count()
     jumlah_reported = Report.objects.filter(status__iexact='REPORTED').count()
     jumlah_in_progress = Report.objects.filter(status__iexact='IN_PROGRESS').count()
@@ -75,7 +75,6 @@ def logout_frontend_view(request):
     messages.info(request, 'Sesi Anda telah berakhir.')
     return redirect('backend_home_root')
 
-# FIX FIX: Perbaikan query ORM agar menggunakan field model 'user' yang benar
 def tambah_laporan_frontend(request):
     if request.method == 'POST' and request.user.is_authenticated:
         t = request.POST.get('title')
@@ -83,6 +82,7 @@ def tambah_laporan_frontend(request):
         s = request.POST.get('status', 'REPORTED')
         
         try:
+            # Menggunakan syntax ORM asli Django (user=request.user)
             Report.objects.create(title=t, location=l, status=s, user=request.user)
             messages.success(request, 'Laporan baru berhasil disimpan ke sistem!')
         except Exception as e:
