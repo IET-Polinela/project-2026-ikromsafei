@@ -15,19 +15,32 @@ router.register(r'report', ReportViewSet, basename='report')
 User = get_user_model()
 
 # ========================================================
-# VIEWS FRONTEND - SINKRONISASI COCOUNTERS & STATISTIK 
+# VIEWS FRONTEND - DENGAN PENGAMAN MULTIVALUEDICTKEYERROR
 # ========================================================
 
 def backend_landing_page(request):
-    reports_data = Report.objects.all().order_by('-id')
-    
-    # Hitung data asli real-time dari database kelompokmu (Bahasa Inggris)
-    total_laporan = Report.objects.count()
-    jumlah_reported = Report.objects.filter(status__iexact='REPORTED').count()
-    jumlah_in_progress = Report.objects.filter(status__iexact='IN_PROGRESS').count()
-    jumlah_verified = Report.objects.filter(status__iexact='VERIFIED').count()
-    jumlah_resolved = Report.objects.filter(status__iexact='RESOLVED').count()
-    jumlah_draft = Report.objects.filter(status__iexact='draft').count()
+    if request.user.is_authenticated:
+        if request.user.is_staff or request.user.is_superuser:
+            # Admin melihat semua data
+            reports_data = Report.objects.all().order_by('-id')
+            total_laporan = Report.objects.count()
+            jumlah_reported = Report.objects.filter(status__iexact='REPORTED').count()
+            jumlah_in_progress = Report.objects.filter(status__iexact='IN_PROGRESS').count()
+            jumlah_verified = Report.objects.filter(status__iexact='VERIFIED').count()
+            jumlah_resolved = Report.objects.filter(status__iexact='RESOLVED').count()
+            jumlah_draft = Report.objects.filter(status__iexact='draft').count()
+        else:
+            # Warga/Client melihat miliknya sendiri
+            reports_data = Report.objects.filter(user=request.user).order_by('-id')
+            total_laporan = Report.objects.filter(user=request.user).count()
+            jumlah_reported = Report.objects.filter(user=request.user, status__iexact='REPORTED').count()
+            jumlah_in_progress = Report.objects.filter(user=request.user, status__iexact='IN_PROGRESS').count()
+            jumlah_verified = Report.objects.filter(user=request.user, status__iexact='VERIFIED').count()
+            jumlah_resolved = Report.objects.filter(user=request.user, status__iexact='RESOLVED').count()
+            jumlah_draft = Report.objects.filter(user=request.user, status__iexact='draft').count()
+    else:
+        reports_data = []
+        total_laporan = jumlah_reported = jumlah_in_progress = jumlah_verified = jumlah_resolved = jumlah_draft = 0
 
     konteks = {
         'reports': reports_data,
@@ -79,12 +92,15 @@ def tambah_laporan_frontend(request):
     if request.method == 'POST' and request.user.is_authenticated:
         t = request.POST.get('title')
         l = request.POST.get('location')
-        s = request.POST.get('status', 'REPORTED')
         
+        # FIX: Gunakan .get() dengan fallback 'REPORTED' agar anti-error walaupun key status kosong
+        s = request.POST.get('status', 'REPORTED')
+        if not s:
+            s = 'REPORTED'
+            
         try:
-            # Menggunakan syntax ORM asli Django (user=request.user)
             Report.objects.create(title=t, location=l, status=s, user=request.user)
-            messages.success(request, 'Laporan baru berhasil disimpan ke sistem!')
+            messages.success(request, 'Laporan aduan baru berhasil disimpan ke sistem!')
         except Exception as e:
             messages.error(request, f'Gagal menyimpan laporan: {str(e)}')
     return redirect('backend_home_root')
@@ -93,7 +109,7 @@ def ubah_laporan_frontend(request, pk):
     if request.method == 'POST' and request.user.is_authenticated:
         if request.user.is_staff or request.user.is_superuser:
             laporan = get_object_or_404(Report, pk=pk)
-            laporan.status = request.POST.get('status')
+            laporan.status = request.POST.get('status', 'REPORTED')
             laporan.save()
             messages.success(request, f'Status laporan ID #{pk} berhasil diperbarui!')
         else:
