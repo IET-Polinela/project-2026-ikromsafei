@@ -15,12 +15,31 @@ router.register(r'report', ReportViewSet, basename='report')
 User = get_user_model()
 
 # ========================================================
-# VIEWS UTAMA SINKRONISASI FRONTEND (ANTI 401 EROR)
+# VIEWS FRONTEND - STATISTIK REAL-TIME & AKURAT
 # ========================================================
 
 def backend_landing_page(request):
+    # Mengambil semua laporan untuk ditampilkan di tabel
     reports_data = Report.objects.all().order_by('-id')
-    return render(request, 'backend_home.html', {'reports': reports_data})
+    
+    # Hitung jumlah berdasarkan status secara dinamis dari database
+    total_laporan = Report.objects.count()
+    jumlah_diproses = Report.objects.filter(status__iexact='Diproses').count()
+    jumlah_sedang_diproses = Report.objects.filter(status__iexact='Sedang Diproses').count()
+    jumlah_sedang_dilaksanakan = Report.objects.filter(status__iexact='Sedang Dilaksanakan').count()
+    jumlah_selesai = Report.objects.filter(status__iexact='Selesai').count()
+    jumlah_draft = Report.objects.filter(status__iexact='draft').count()
+
+    konteks = {
+        'reports': reports_data,
+        'total_laporan': total_laporan,
+        'jumlah_diproses': jumlah_diproses,
+        'jumlah_sedang_diproses': jumlah_sedang_diproses,
+        'jumlah_sedang_dilaksanakan': jumlah_sedang_dilaksanakan,
+        'jumlah_selesai': jumlah_selesai,
+        'jumlah_draft': jumlah_draft,
+    }
+    return render(request, 'backend_home.html', konteks)
 
 def login_frontend_view(request):
     if request.method == 'POST':
@@ -57,7 +76,6 @@ def logout_frontend_view(request):
     messages.info(request, 'Sesi Anda telah berakhir.')
     return redirect('backend_home_root')
 
-# 🆕 FUNGSI TAMBAH DATA (UNTUK USER)
 def tambah_laporan_frontend(request):
     if request.method == 'POST' and request.user.is_authenticated:
         t = request.POST.get('title')
@@ -65,10 +83,9 @@ def tambah_laporan_frontend(request):
         s = request.POST.get('status', 'Diproses')
         
         Report.objects.create(title=t, location=l, status=s, user=request.user)
-        messages.success(request, 'Laporan keluhan Anda berhasil dikirim ke sistem!')
+        messages.success(request, 'Laporan baru berhasil disimpan ke sistem!')
     return redirect('backend_home_root')
 
-# 🆕 FUNGSI UBAH DATA STATUS (UNTUK ADMIN)
 def ubah_laporan_frontend(request, pk):
     if request.method == 'POST' and request.user.is_authenticated:
         if request.user.is_staff or request.user.is_superuser:
@@ -80,7 +97,6 @@ def ubah_laporan_frontend(request, pk):
             messages.error(request, 'Akses ditolak! Anda bukan admin.')
     return redirect('backend_home_root')
 
-# 🆕 FUNGSI HAPUS DATA (UNTUK ADMIN)
 def hapus_laporan_frontend(request, pk):
     if request.user.is_authenticated and (request.user.is_staff or request.user.is_superuser):
         laporan = get_object_or_404(Report, pk=pk)
@@ -99,7 +115,6 @@ urlpatterns = [
     path('register-frontend/', register_frontend_view, name='register_frontend'),
     path('logout-frontend/', logout_frontend_view, name='logout_frontend'),
     
-    # Rute Baru Penanganan Aksi Form HTML
     path('tambah-laporan/', tambah_laporan_frontend, name='tambah_laporan_frontend'),
     path('ubah-laporan/<int:pk>/', ubah_laporan_frontend, name='ubah_laporan_frontend'),
     path('hapus-laporan/<int:pk>/', hapus_laporan_frontend, name='hapus_laporan_frontend'),

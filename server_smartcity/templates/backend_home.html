@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Kota Pintar</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Premium -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -40,10 +37,6 @@
         .navbar-custom .navbar-brand {
             color: #ffffff !important;
             font-weight: 800;
-        }
-        .navbar-custom .nav-link {
-            color: rgba(255, 255, 255, 0.8) !important;
-            font-weight: 600;
         }
 
         .portal-container {
@@ -96,59 +89,59 @@
             font-size: 0.85rem;
         }
 
+        /* DASHBOARD INDIKATOR STATISTIK */
         .dash-card {
             background: #ffffff;
             border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+            padding: 16px;
+            box-shadow: 0 8px 20px rgba(7,30,61,0.04);
+            border: 1px solid rgba(0,0,0,0.02);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         .icon-shape {
-            width: 54px;
-            height: 54px;
-            border-radius: 14px;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
+            font-size: 1.1rem;
+            flex-shrink: 0;
         }
-        .bg-light-blue { background-color: #e3edff; color: #0052cc; }
-        .bg-light-success { background-color: #e6f6ec; color: #155724; }
-        .bg-light-warning { background-color: #fff3cd; color: #856404; }
+        
+        /* THEME WARNA INDIKATOR CARD */
+        .bg-card-total { background-color: #e3edff; color: #0052cc; }
+        .bg-card-proses { background-color: #f0f4f8; color: #627d98; }
+        .bg-card-sedang { background-color: #e0f7fa; color: #00838f; }
+        .bg-card-jalan { background-color: #e8eaf6; color: #3f51b5; }
+        .bg-card-selesai { background-color: #e6f6ec; color: #155724; }
+        .bg-card-draft { background-color: #fff3cd; color: #856404; }
 
         .card-custom { border: none; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); background: #ffffff; }
-        footer { text-align: center; padding: 25px 0; color: #627d98; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.05); }
+        footer { text-align: center; padding: 25px 0; color: #627d98; background: #ffffff; border-top: 1px solid rgba(0,0,0,0.05); mgt-auto; }
     </style>
 </head>
 <body>
 
-    <!-- NAVBAR UTAMA -->
     <nav class="navbar navbar-expand-lg navbar-custom navbar-dark shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex flex-column" href="/">
                 <span><i class="fa-solid fa-city text-info me-2"></i>Kota IET</span>
                 <span class="fw-normal text-white-50" style="font-size: 0.7rem; margin-top: 2px;">Kehidupan Cerdas, Harmoni Perkotaan</span>
             </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-3 me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link active" href="/">🏠 Rumah</a></li>
-                </ul>
-                <div class="d-flex gap-2 align-items-center">
-                    {% if user.is_authenticated %}
-                        <span class="text-white me-2 small">Sesi: <strong class="text-info">{{ user.username }}</strong></span>
-                        <a href="{% url 'logout_frontend' %}" class="btn btn-danger btn-sm px-4 rounded-pill fw-bold">Log Out</a>
-                    {% else %}
-                        <a href="/" class="btn btn-outline-light btn-sm px-4 rounded-pill fw-bold">Login</a>
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalRegister" class="btn btn-info text-dark btn-sm px-4 rounded-pill fw-bold shadow-sm">Daftar</a>
-                    {% endif %}
-                </div>
+            <div class="ms-auto d-flex gap-2 align-items-center">
+                {% if user.is_authenticated %}
+                    <span class="text-white me-2 small">Sesi: <strong class="text-info">{{ user.username }}</strong></span>
+                    <a href="{% url 'logout_frontend' %}" class="btn btn-danger btn-sm px-4 rounded-pill fw-bold">Log Out</a>
+                {% else %}
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalRegister" class="btn btn-info text-dark btn-sm px-4 rounded-pill fw-bold shadow-sm">Daftar</a>
+                {% endif %}
             </div>
         </div>
     </nav>
 
-    <!-- NOTIFIKASI SYSTEM -->
     <div class="container mt-3">
         {% if messages %}
             {% for message in messages %}
@@ -160,9 +153,6 @@
         {% endif %}
     </div>
 
-    <!-- ======================================================== -->
-    <!-- TAMPILAN 1: BELUM LOGIN -->
-    <!-- ======================================================== -->
     {% if not user.is_authenticated %}
     <div class="container my-auto">
         <div class="portal-container row mx-auto">
@@ -202,15 +192,64 @@
         </div>
     </div>
 
-    <!-- ======================================================== -->
-    <!-- TAMPILAN 2: SUDAH LOGIN -->
-    <!-- ======================================================== -->
     {% else %}
     <div class="container my-4 mb-5">
+        
         <div class="row g-3 mb-4">
-            <div class="col-md-4"><div class="dash-card d-flex align-items-center gap-3"><div class="icon-shape bg-light-blue"><i class="fa-solid fa-folder-open"></i></div><div><small class="text-muted d-block fw-bold">Sistem Monitoring</small><h4 class="fw-bold text-dark mb-0">Kota Pintar</h4></div></div></div>
-            <div class="col-md-4"><div class="dash-card d-flex align-items-center gap-3"><div class="icon-shape bg-light-success"><i class="fa-solid fa-square-check"></i></div><div><small class="text-muted d-block fw-bold">Wilayah</small><h4 class="fw-bold text-success mb-0">Pesawaran</h4></div></div></div>
-            <div class="col-md-4"><div class="dash-card d-flex align-items-center gap-3"><div class="icon-shape bg-light-warning"><i class="fa-solid fa-user-lock"></i></div><div><small class="text-muted d-block fw-bold">Hak Otoritas</small><h4 class="fw-bold text-dark mb-0">{% if user.is_staff or user.is_superuser %}Admin Panel{% else %}Akses Warga{% endif %}</h4></div></div></div>
+            <div class="col-md-4 col-lg-2">
+                <div class="dash-card">
+                    <div class="icon-shape bg-card-total"><i class="fa-solid fa-layer-group"></i></div>
+                    <div>
+                        <small class="text-muted d-block fw-bold" style="font-size: 0.65rem;">TOTAL DATA</small>
+                        <h5 class="fw-bold text-dark mb-0">{{ total_laporan }}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-2">
+                <div class="dash-card">
+                    <div class="icon-shape bg-card-proses"><i class="fa-solid fa-spinner"></i></div>
+                    <div>
+                        <small class="text-muted d-block fw-bold" style="font-size: 0.65rem;">DIPROSES</small>
+                        <h5 class="fw-bold text-secondary mb-0">{{ jumlah_diproses }}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-2">
+                <div class="dash-card">
+                    <div class="icon-shape bg-card-sedang"><i class="fa-solid fa-hourglass-half"></i></div>
+                    <div>
+                        <small class="text-muted d-block fw-bold" style="font-size: 0.65rem;">SDG PROSES</small>
+                        <h5 class="fw-bold text-info mb-0">{{ jumlah_sedang_diproses }}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-2">
+                <div class="dash-card">
+                    <div class="icon-shape bg-card-jalan"><i class="fa-solid fa-person-digging"></i></div>
+                    <div>
+                        <small class="text-muted d-block fw-bold" style="font-size: 0.65rem;">DILAKSANAKAN</small>
+                        <h5 class="fw-bold text-primary mb-0">{{ jumlah_sedang_dilaksanakan }}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-2">
+                <div class="dash-card">
+                    <div class="icon-shape bg-card-selesai"><i class="fa-solid fa-circle-check"></i></div>
+                    <div>
+                        <small class="text-muted d-block fw-bold" style="font-size: 0.65rem;">SELESAI</small>
+                        <h5 class="fw-bold text-success mb-0">{{ jumlah_selesai }}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-2">
+                <div class="dash-card">
+                    <div class="icon-shape bg-card-draft"><i class="fa-solid fa-file-lines"></i></div>
+                    <div>
+                        <small class="text-muted d-block fw-bold" style="font-size: 0.65rem;">DRAFT</small>
+                        <h5 class="fw-bold text-warning mb-0">{{ jumlah_draft }}</h5>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="card card-custom p-3 border mb-4">
@@ -226,7 +265,6 @@
             </div>
         </div>
 
-        <!-- TABEL DATA LAPORAN -->
         <div class="card card-custom border" id="tabel-laporan">
             <div class="card-header bg-white py-3 border-0 rounded-top-4">
                 <h5 class="mb-0 text-dark fw-bold"><i class="fa-solid fa-list-check text-primary me-2"></i>Daftar Laporan Masuk</h5>
@@ -248,7 +286,6 @@
                                 <td class="ps-4 fw-bold text-dark">{{ report.title }}</td>
                                 <td><i class="fa-solid fa-location-dot text-danger me-1"></i> {{ report.location }}</td>
                                 <td class="text-center">
-                                    <!-- BADGE WARNA DINAMIS SESUAI REQUEST -->
                                     {% if report.status|lower == 'draft' %}
                                         <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">Draft</span>
                                     {% elif report.status|lower == 'diproses' %}
@@ -267,44 +304,14 @@
                                     <div class="btn-group gap-1">
                                         <button class="btn btn-sm btn-light border" title="Lihat"><i class="fa-solid fa-eye"></i></button>
                                         {% if user.is_staff or user.is_superuser %}
-                                            <!-- Pemicu Modal Edit yang Berfungsi Sekarang -->
-                                            <button class="btn btn-sm btn-warning border text-white" data-bs-toggle="modal" data-bs-target="#modalEditStatus{{ report.id }}" title="Admin Edit Status"><i class="fa-solid fa-pen-to-square"></i></button>
-                                            <a href="{% url 'hapus_laporan_frontend' report.id %}" class="btn btn-sm btn-danger border" onclick="return confirm('Yakin ingin menghapus laporan ini, Krom?')" title="Admin Hapus"><i class="fa-solid fa-trash"></i></a>
+                                            <button class="btn btn-sm btn-warning border text-white" data-bs-toggle="modal" data-bs-target="#modalEditStatus{{ report.id }}" title="Ubah Status"><i class="fa-solid fa-pencil"></i></button>
+                                            <a href="{% url 'hapus_laporan_frontend' report.id %}" class="btn btn-sm btn-danger border" onclick="return confirm('Apakah Anda yakin ingin menghapus aduan ini, Krom?')" title="Hapus"><i class="fa-solid fa-trash"></i></a>
                                         {% endif %}
                                     </div>
                                 </td>
                             </tr>
-
-                            <!-- POPUP MODAL KHUSUS: EDIT STATUS UNTUK ADMIN -->
-                            <div class="modal fade" id="modalEditStatus{{ report.id }}" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <form action="{% url 'ubah_laporan_frontend' report.id %}" method="POST" class="modal-content border-0 shadow">
-                                        {% csrf_token %}
-                                        <div class="modal-header bg-warning text-white">
-                                            <h5 class="modal-title fw-bold"><i class="fa-solid fa-pen-to-square me-2"></i>Ubah Status Laporan #{{ report.id }}</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body p-4">
-                                            <p class="mb-2">Judul: <strong>{{ report.title }}</strong></p>
-                                            <div class="mb-3">
-                                                <label class="form-label fw-bold">Pilih Status Kerja Terbaru:</label>
-                                                <select name="status" class="form-select form-control-custom">
-                                                    <option value="Diproses" {% if report.status == 'Diproses' %}selected{% endif %}>Diproses</option>
-                                                    <option value="Sedang Diproses" {% if report.status == 'Sedang Diproses' %}selected{% endif %}>Sedang Diproses</option>
-                                                    <option value="Sedang Dilaksanakan" {% if report.status == 'Sedang Dilaksanakan' %}selected{% endif %}>Sedang Dilaksanakan</option>
-                                                    <option value="Selesai" {% if report.status == 'Selesai' %}selected{% endif %}>Selesai</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
-                                            <button type="submit" class="btn btn-warning text-white fw-bold">Simpan Perubahan</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
                             {% empty %}
-                            <tr><td colspan="4" class="text-center py-4 text-muted">Belum ada laporan keluhan.</td></tr>
+                            <tr><td colspan="4" class="text-center py-4 text-muted">Belum ada data aduan keluhan masyarakat.</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -312,11 +319,50 @@
             </div>
         </div>
     </div>
+
+    {% if user.is_staff or user.is_superuser %}
+        {% for report in reports %}
+        <div class="modal fade" id="modalEditStatus{{ report.id }}" tabindex="-1" aria-labelledby="editLabel{{ report.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <form action="{% url 'ubah_laporan_frontend' report.id %}" method="POST" class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+                    {% csrf_token %}
+                    <div class="modal-header bg-warning text-white py-3 rounded-top-3">
+                        <h5 class="modal-title fw-bold" id="editLabel{{ report.id }}"><i class="fa-solid fa-pen-to-square me-2"></i>Pembaruan Progres Keluhan #{{ report.id }}</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div class="mb-3">
+                            <label class="text-muted small d-block">Judul Aduan</label>
+                            <span class="fw-bold text-dark fs-6">{{ report.title }}</span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small d-block">Lokasi Kejadian</label>
+                            <span class="fw-medium text-secondary"><i class="fa-solid fa-location-dot text-danger me-1"></i>{{ report.location }}</span>
+                        </div>
+                        <hr class="text-muted opacity-25">
+                        <div class="mb-2">
+                            <label class="form-label fw-bold text-dark">Ubah Kedudukan Status:</label>
+                            <select name="status" class="form-select form-control-custom">
+                                <option value="Diproses" {% if report.status == 'Diproses' %}selected{% endif %}>Diproses</option>
+                                <option value="Sedang Diproses" {% if report.status == 'Sedang Diproses' %}selected{% endif %}>Sedang Diproses</option>
+                                <option value="Sedang Dilaksanakan" {% if report.status == 'Sedang Dilaksanakan' %}selected{% endif %}>Sedang Dilaksanakan</option>
+                                <option value="Selesai" {% if report.status == 'Selesai' %}selected{% endif %}>Selesai</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light border-0 rounded-bottom-3">
+                        <button type="button" class="btn btn-light border fw-semibold rounded-3" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-warning text-white fw-bold px-4 rounded-3 shadow-sm">Simpan Pembaruan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
     {% endif %}
 
     <footer><div class="container fw-medium">© 2026 <span class="text-primary fw-bold">IET Kota</span> – Dinas Kominfo Bandar Lampung.</div></footer>
 
-    <!-- POPUP MODAL: REGISTER -->
     <div class="modal fade" id="modalRegister" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
@@ -344,20 +390,18 @@
         </div>
     </div>
 
-    <!-- POPUP MODAL: TAMBAH DATA (KHUSUS WARGA / CLIENT) -->
-    <div class="modal fade" id="modalTambahLaporan" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modalTambahLaporan" tabindex="-1" aria-labelledby="tambahLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
                 <div class="modal-header bg-primary text-white py-3 rounded-top-4">
-                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-file-medical me-2"></i>Buat Laporan Baru</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title fw-bold" id="tambahLabel"><i class="fa-solid fa-file-medical me-2"></i>Buat Aduan Keluhan Baru</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <!-- 🚀 ACTION AMAN MENGARAH KE VIEW SYNC DJANGO -->
                 <form action="{% url 'tambah_laporan_frontend' %}" method="POST" class="modal-body p-4">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Judul Masalah Keluhan</label>
-                        <input type="text" name="title" class="form-control form-control-custom" placeholder="Contoh: Lampu Jalan Padam" required>
+                        <input type="text" name="title" class="form-control form-control-custom" placeholder="Contoh: Saluran Air Mampet" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary">Lokasi Infrastruktur</label>
@@ -370,13 +414,12 @@
                             <option value="draft">Simpan Sebagai Draft</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-portal w-100 py-2.5 mt-2">Kirim ke Sistem</button>
+                    <button type="submit" class="btn btn-portal w-100 py-2.5 mt-2 shadow">Kirim ke Sistem</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
