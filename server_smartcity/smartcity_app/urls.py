@@ -16,30 +16,28 @@ router.register(r'report', ReportViewSet, basename='report')
 User = get_user_model()
 
 # ========================================================
-# VIEWS FRONTEND - SINKRONISASI FILTER DAN HAK AKSES DRAFT
+# VIEWS FRONTEND - SINKRONISASI ROLE & FILTER DATA
 # ========================================================
 
 def backend_landing_page(request):
     if request.user.is_authenticated:
         if request.user.is_staff or request.user.is_superuser:
-            # 1. Admin melihat semua keluhan, KECUALI DRAFT
+            # Admin melihat semua data keluhan (Kecuali status 'draft')
             reports_data = Report.objects.exclude(status__iexact='draft').order_by('-id')
-            total_laporan = reports_data.count()
-            
-            # Hitung data statistik (Draft diabaikan/set ke 0 untuk Admin)
+            total_laporan = Report.objects.exclude(status__iexact='draft').count()
             jumlah_reported = Report.objects.filter(status__iexact='REPORTED').count()
             jumlah_in_progress = Report.objects.filter(status__iexact='IN_PROGRESS').count()
             jumlah_verified = Report.objects.filter(status__iexact='VERIFIED').count()
             jumlah_resolved = Report.objects.filter(status__iexact='RESOLVED').count()
-            jumlah_draft = 0 
+            jumlah_draft = 0
         else:
-            # 2. Warga melihat semua laporan publik, PLUS draft milik dia sendiri
+            # Warga melihat laporan publik + draft miliknya sendiri
             reports_data = Report.objects.filter(
-                Q(reporter=request.user) | ~Q(status__iexact='draft')
+                Q(status__iexact='draft', reporter=request.user) | 
+                ~Q(status__iexact='draft')
             ).order_by('-id')
-            total_laporan = reports_data.count()
             
-            # Hitung data statistik warga (termasuk draft milik dia pribadi)
+            total_laporan = reports_data.count()
             jumlah_reported = Report.objects.filter(status__iexact='REPORTED').count()
             jumlah_in_progress = Report.objects.filter(status__iexact='IN_PROGRESS').count()
             jumlah_verified = Report.objects.filter(status__iexact='VERIFIED').count()
@@ -105,7 +103,6 @@ def tambah_laporan_frontend(request):
             s = 'REPORTED'
             
         try:
-            # Query valid menggunakan reporter=request.user
             Report.objects.create(title=t, location=l, status=s, reporter=request.user)
             messages.success(request, 'Laporan aduan baru berhasil disimpan ke sistem!')
         except Exception as e:
@@ -114,13 +111,24 @@ def tambah_laporan_frontend(request):
 
 def ubah_laporan_frontend(request, pk):
     if request.method == 'POST' and request.user.is_authenticated:
+        laporan = get_object_or_404(Report, pk=pk)
+        
+        # Admin mengubah status progres
         if request.user.is_staff or request.user.is_superuser:
-            laporan = get_object_or_404(Report, pk=pk)
             laporan.status = request.POST.get('status', 'REPORTED')
             laporan.save()
             messages.success(request, f'Status laporan ID #{pk} berhasil diperbarui!')
+            
+        # Warga mengubah isi draft miliknya sendiri
+        elif laporan.reporter == request.user and laporan.status.lower() == 'draft':
+            laporan.title = request.POST.get('title', laporan.title)
+            laporan.location = request.POST.get('location', laporan.location)
+            laporan.status = request.POST.get('status', 'draft')
+            laporan.save()
+            messages.success(request, f'Draft aduan ID #{pk} berhasil diperbarui!')
         else:
-            messages.error(request, 'Akses ditolak! Anda bukan admin.')
+            messages.error(request, 'Akses ditolak!')
+            
     return redirect('backend_home_root')
 
 def hapus_laporan_frontend(request, pk):
