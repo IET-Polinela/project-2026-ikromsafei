@@ -3,76 +3,396 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart City Portal</title>
+    <title>Dashboard Portal Smart City - Pesawaran</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .auth-card {
-            max-width: 450px;
-            margin: 60px auto;
+            max-width: 430px;
+            margin: 80px auto;
+            border: none;
+            border-radius: 16px;
+        }
+        .card-stats {
             border: none;
             border-radius: 12px;
+            transition: transform 0.2s;
+        }
+        .card-stats:hover {
+            transform: translateY(-5px);
+        }
+        .sidebar-brand {
+            background-color: #0d6efd;
+            color: white;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-dark bg-primary shadow-sm mb-4">
-        <div class="container-fluid justify-content-start px-4">
-            <span class="navbar-brand mb-0 h1 fw-bold">
-                🏢 Smart City Portal
-            </span>
-        </div>
-    </nav>
-
     <div id="auth-container" class="container">
         
-        <div id="login-box" class="card auth-card p-4 shadow-sm">
-            <h3 class="text-center fw-bold text-dark mb-4">Login Portal Warga</h3>
-            <div class="mb-3">
-                <label class="form-label fw-semibold">Username</label>
-                <input type="text" id="login-username" class="form-control py-2" placeholder="Masukkan username">
+        <div id="login-box" class="card auth-card p-4 shadow-lg bg-white">
+            <div class="text-center mb-4">
+                <div class="bg-primary text-white d-inline-block p-3 rounded-circle mb-2 shadow">
+                    <i class="fa-solid px-1 fa-building-shield fa-2x"></i>
+                </div>
+                <h3 class="fw-bold text-dark m-0">Smart City Portal</h3>
+                <p class="text-muted small">Kabupaten Pesawaran</p>
             </div>
+            
             <div class="mb-3">
-                <label class="form-label fw-semibold">Password</label>
-                <input type="password" id="login-password" class="form-control py-2" placeholder="Masukkan password">
+                <label class="form-label fw-semibold text-secondary">Username Admin / Warga</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-user text-muted"></i></span>
+                    <input type="text" id="login-username" class="form-control bg-light border-start-0 py-2" placeholder="Masukkan username">
+                </div>
             </div>
-            <button id="btn-login" class="btn btn-primary w-100 py-2 fw-bold mb-3">Masuk</button>
-            <p class="text-center small text-muted mb-0">Belum punya akun? <a href="#" id="link-ke-daftar" class="text-decoration-none fw-bold">Daftar di sini</a></p>
+            
+            <div class="mb-3">
+                <label class="form-label fw-semibold text-secondary">Password</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-lock text-muted"></i></span>
+                    <input type="password" id="login-password" class="form-control bg-light border-start-0 py-2" placeholder="Masukkan password">
+                </div>
+            </div>
+            
+            <button id="btn-login" class="btn btn-primary w-100 py-2 fw-bold rounded-3 shadow-sm mb-3">
+                Masuk ke Portal <i class="fa-solid fa-arrow-right-to-bracket ms-1"></i>
+            </button>
+            <p class="text-center small text-muted mb-0">Belum punya akun warga? <a href="#" id="link-ke-daftar" class="text-decoration-none fw-bold text-primary">Daftar di sini</a></p>
         </div>
 
-        <div id="register-box" class="card auth-card p-4 shadow-sm d-none">
-            <h3 class="text-center fw-bold text-dark mb-4">Daftar Akun Warga</h3>
+        <div id="register-box" class="card auth-card p-4 shadow-lg bg-white d-none">
+            <div class="text-center mb-4">
+                <div class="bg-success text-white d-inline-block p-3 rounded-circle mb-2 shadow">
+                    <i class="fa-solid fa-user-plus fa-2x"></i>
+                </div>
+                <h3 class="fw-bold text-dark m-0">Daftar Akun Warga</h3>
+                <p class="text-muted small">Layanan Mandiri Keluhan Masyarakat</p>
+            </div>
+            
             <div class="mb-3">
-                <label class="form-label fw-semibold">Nama Lengkap</label>
-                <input type="text" id="reg-nama" class="form-control py-2" placeholder="Masukkan nama lengkap">
+                <label class="form-label fw-semibold text-secondary">Nama Lengkap</label>
+                <input type="text" id="reg-nama" class="form-control bg-light py-2" placeholder="Masukkan nama lengkap">
             </div>
             <div class="mb-3">
-                <label class="form-label fw-semibold">Username Baru</label>
-                <input type="text" id="reg-username" class="form-control py-2" placeholder="Buat username">
+                <label class="form-label fw-semibold text-secondary">Username Baru</label>
+                <input type="text" id="reg-username" class="form-control bg-light py-2" placeholder="Buat nama pengguna">
             </div>
             <div class="mb-3">
-                <label class="form-label fw-semibold">Password</label>
-                <input type="password" id="reg-password" class="form-control py-2" placeholder="Buat password">
+                <label class="form-label fw-semibold text-secondary">Password</label>
+                <input type="password" id="reg-password" class="form-control bg-light py-2" placeholder="Buat kata sandi">
             </div>
-            <button id="btn-register" class="btn btn-success w-100 py-2 fw-bold mb-3">Daftar Sekarang</button>
-            <p class="text-center small text-muted mb-0">Sudah punya akun? <a href="#" id="link-ke-login" class="text-decoration-none fw-bold">Login di sini</a></p>
+            
+            <button id="btn-register" class="btn btn-success w-100 py-2 fw-bold rounded-3 shadow-sm mb-3">
+                Daftar Sekarang <i class="fa-solid fa-user-check ms-1"></i>
+            </button>
+            <p class="text-center small text-muted mb-0">Sudah punya akun? <a href="#" id="link-ke-login" class="text-decoration-none fw-bold text-success">Login di sini</a></p>
         </div>
 
     </div>
 
-    <div id="dashboard-container" class="container d-none">
+
+    <div id="dashboard-container" class="d-none">
+        
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow sticky-top">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+                    <i class="fa-solid fa-layer-group me-2"></i> SMART CITY REPOSITORI
+                </a>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="text-white small d-none d-sm-inline" id="user-info-display">
+                        <i class="fa-solid fa-circle-user me-1"></i> Login sebagai: <strong id="session-user">Admin</strong>
+                    </span>
+                    <button id="btn-logout" class="btn btn-light btn-sm fw-bold text-danger rounded-2">
+                        <i class="fa-solid fa-power-off"></i> Keluar
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container-fluid py-4 px-4">
+            
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div>
+                    <h2 class="fw-bold text-dark m-0">Rekap Keluhan Warga</h2>
+                    <p class="text-muted m-0">Sistem Pemantauan Isu Real-time Kabupaten Pesawaran</p>
+                </div>
+                <button class="btn btn-primary fw-bold shadow-sm rounded-3" data-bs-toggle="modal" data-bs-target="#modalLaporan">
+                    <i class="fa-solid fa-plus me-1"></i> Buat Laporan Baru
+                </button>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card card-stats bg-white shadow-sm p-3 border-start border-primary border-4">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="text-muted small text-uppercase fw-bold">Total Laporan</h6>
+                                <h3 class="fw-bold text-dark m-0" id="stat-total">12</h3>
+                            </div>
+                            <div class="text-primary"><i class="fa-solid fa-folder-open fa-2x"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card card-stats bg-white shadow-sm p-3 border-start border-warning border-4">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="text-muted small text-uppercase fw-bold">Menunggu</h6>
+                                <h3 class="fw-bold text-warning m-0" id="stat-pending">4</h3>
+                            </div>
+                            <div class="text-warning"><i class="fa-solid fa-clock-rotate-left fa-2x"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card card-stats bg-white shadow-sm p-3 border-start border-info border-4">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="text-muted small text-uppercase fw-bold">Diproses</h6>
+                                <h3 class="fw-bold text-info m-0" id="stat-process">3</h3>
+                            </div>
+                            <div class="text-info"><i class="fa-solid fa-spinner fa-2x"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card card-stats bg-white shadow-sm p-3 border-start border-success border-4">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="text-muted small text-uppercase fw-bold">Selesai</h6>
+                                <h3 class="fw-bold text-success m-0" id="stat-done">5</h3>
+                            </div>
+                            <div class="text-success"><i class="fa-solid fa-circle-check fa-2x"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <h5 class="fw-bold text-dark m-0"><i class="fa-solid fa-list-check me-1 text-primary"></i> Manajamen List Aduan</h5>
+                    <div class="d-flex gap-2">
+                        <input type="text" class="form-control form-control-sm" placeholder="Cari aduan warga...">
+                        <select class="form-select form-select-sm" style="max-width: 140px;">
+                            <option value="">Semua Status</option>
+                            <option>Menunggu</option>
+                            <option>Diproses</option>
+                            <option>Selesai</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light text-secondary small text-uppercase">
+                            <tr>
+                                <th class="ps-4">ID</th>
+                                <th>Pelapor</th>
+                                <th>Kategori Isu</th>
+                                <th>Deskripsi Keluhan</th>
+                                <th>Tanggal Masuk</th>
+                                <th>Status</th>
+                                <th class="text-center pe-4">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-laporan-body">
+                            <tr>
+                                <td class="ps-4 fw-bold">#0241</td>
+                                <td><strong>Wawan Setiawan</strong></td>
+                                <td><span class="badge bg-danger">Infrastruktur</span></td>
+                                <td class="text-truncate" style="max-width: 250px;">Jalan Raya Gedong Tataan berlubang parah bikin macet panjang.</td>
+                                <td>14 Juni 2026</td>
+                                <td><span class="badge bg-warning text-dark"><i class="fa-solid fa-clock me-1"></i>Menunggu</span></td>
+                                <td class="text-center pe-4">
+                                    <button class="btn btn-sm btn-outline-primary me-1"><i class="fa-solid fa-pencil"></i></button>
+                                    <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4 fw-bold">#0242</td>
+                                <td><span class="text-muted">Anonim</span></td>
+                                <td><span class="badge bg-warning text-dark">Fasilitas Umum</span></td>
+                                <td class="text-truncate" style="max-width: 250px;">Lampu jalan di area Negri Katon mati total kalau malam rawan begal.</td>
+                                <td>15 Juni 2026</td>
+                                <td><span class="badge bg-info"><i class="fa-solid fa-spinner fa-spin me-1"></i>Diproses</span></td>
+                                <td class="text-center pe-4">
+                                    <button class="btn btn-sm btn-outline-primary me-1"><i class="fa-solid fa-pencil"></i></button>
+                                    <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="ps-4 fw-bold">#0243</td>
+                                <td><strong>Anisa Putri</strong></td>
+                                <td><span class="badge bg-success">Kebersihan</span></td>
+                                <td class="text-truncate" style="max-width: 250px;">Penumpukan sampah liar di pinggir jembatan Way Lima baunya menyengat.</td>
+                                <td>12 Juni 2026</td>
+                                <td><span class="badge bg-success"><i class="fa-solid fa-check me-1"></i>Selesai</span></td>
+                                <td class="text-center pe-4">
+                                    <button class="btn btn-sm btn-outline-primary me-1"><i class="fa-solid fa-pencil"></i></button>
+                                    <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
+    </div>
+
+    <div class="modal fade" id="modalLaporan" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-3 border-0 shadow">
+                <div class="modal-header bg-primary text-white py-3">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-bullhorn me-1"></i> Form Pengaduan Baru</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-transform="close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Kategori Isu</label>
+                        <select class="form-select" id="input-kategori">
+                            <option>Infrastruktur</option>
+                            <option>Fasilitas Umum</option>
+                            <option>Kebersihan / Lingkungan</option>
+                            <option>Keamanan</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Deskripsi Keluhan Anda</label>
+                        <textarea class="form-control" id="input-deskripsi" rows="4" placeholder="Tulis rincian keluhan, lokasi kejadian secara jelas..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary fw-bold px-3" id="btn-simpan-laporan" data-bs-dismiss="modal">Kirim Laporan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script>
-        if (!window.location.hash || window.location.hash === '' || window.location.hash === '#') {
-            window.location.hash = '#dashboard';
+        // Setup Database User di LocalStorage Browser
+        if (!localStorage.getItem('users')) {
+            const defaultUsers = [
+                { username: 'admin', password: 'admin123', role: 'admin' },
+                { username: 'wawan', password: 'wawan123', role: 'warga' }
+            ];
+            localStorage.setItem('users', JSON.stringify(defaultUsers));
         }
+
+        // Jalur Alur Tukar Box (Login <-> Daftar)
+        document.getElementById('link-ke-daftar').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('login-box').classList.add('d-none');
+            document.getElementById('register-box').classList.remove('d-none');
+        });
+
+        document.getElementById('link-ke-login').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('register-box').classList.add('d-none');
+            document.getElementById('login-box').classList.remove('d-none');
+        });
+
+        // Fitur Daftar Warga Baru
+        document.getElementById('btn-register').addEventListener('click', function() {
+            const nama = document.getElementById('reg-nama').value.trim();
+            const username = document.getElementById('reg-username').value.trim();
+            const password = document.getElementById('reg-password').value.trim();
+
+            if (!nama || !username || !password) {
+                alert('Peringatan: Semua data form pendaftaran wajib diisi!');
+                return;
+            }
+
+            let databaseUsers = JSON.parse(localStorage.getItem('users'));
+            const cekUser = databaseUsers.find(user => user.username === username);
+            
+            if (cekUser) {
+                alert('Eror: Username tersebut sudah terpakai. Sila ganti!');
+                return;
+            }
+
+            databaseUsers.push({ username: username, password: password, role: 'warga' });
+            localStorage.setItem('users', JSON.stringify(databaseUsers));
+
+            alert('Pendaftaran Berhasil! Silakan masuk memakai kredensial baru tersebut.');
+            document.getElementById('register-box').classList.add('d-none');
+            document.getElementById('login-box').classList.remove('d-none');
+        });
+
+        // Fitur Login Validasi Utama (Begitu masuk langsung buka dashboard asli)
+        document.getElementById('btn-login').addEventListener('click', function() {
+            const userIn = document.getElementById('login-username').value.trim();
+            const passIn = document.getElementById('login-password').value.trim();
+
+            const databaseUsers = JSON.parse(localStorage.getItem('users'));
+            const userValid = databaseUsers.find(user => user.username === userIn && user.password === passIn);
+
+            if (userValid) {
+                alert(`Login Berhasil! Selamat bekerja, ${userValid.username}.`);
+                
+                // Amankan sesi visual DOM
+                document.getElementById('auth-container').classList.add('d-none');
+                document.getElementById('dashboard-container').classList.remove('d-none');
+                document.getElementById('session-user').innerText = userValid.username;
+            } else {
+                alert('Kesalahan: Kombinasi password atau username salah!');
+            }
+        });
+
+        // Fitur Keluar / Logout Kembali ke Login Awal
+        document.getElementById('btn-logout').addEventListener('click', function() {
+            document.getElementById('dashboard-container').classList.add('d-none');
+            document.getElementById('auth-container').classList.remove('d-none');
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
+        });
+
+        // Fitur Tambah Laporan Realtime ke Tabel Rekap
+        document.getElementById('btn-simpan-laporan').addEventListener('click', function() {
+            const kat = document.getElementById('input-kategori').value;
+            const desk = document.getElementById('input-deskripsi').value.trim();
+            const pelapor = document.getElementById('session-user').innerText;
+
+            if(!desk) { alert('Keluhan gagal dikirim, deskripsi tidak boleh kosong!'); return; }
+
+            const randID = Math.floor(1000 + Math.random() * 9000);
+            const tbody = document.getElementById('tabel-laporan-body');
+            
+            const rowBaru = `
+                <tr>
+                    <td class="ps-4 fw-bold">#${randID}</td>
+                    <td><strong>${pelapor}</strong></td>
+                    <td><span class="badge bg-primary">${kat}</span></td>
+                    <td class="text-truncate" style="max-width: 250px;">${desk}</td>
+                    <td>Hari Ini</td>
+                    <td><span class="badge bg-warning text-dark"><i class="fa-solid fa-clock me-1"></i>Menunggu</span></td>
+                    <td class="text-center pe-4">
+                        <button class="btn btn-sm btn-outline-primary me-1"><i class="fa-solid fa-pencil"></i></button>
+                        <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `;
+            tbody.insertAdjacentHTML('afterbegin', rowBaru);
+            
+            // Update counter ringkasan laporan atas
+            const curTotal = parseInt(document.getElementById('stat-total').innerText);
+            const curPending = parseInt(document.getElementById('stat-pending').innerText);
+            document.getElementById('stat-total').innerText = curTotal + 1;
+            document.getElementById('stat-pending').innerText = curPending + 1;
+
+            document.getElementById('input-deskripsi').value = '';
+            alert('Laporan aduan Anda sukses disuntikkan ke dalam sistem!');
+        });
     </script>
 
-    <script src="js/auth.js"></script>
-    <script src="js/router.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
