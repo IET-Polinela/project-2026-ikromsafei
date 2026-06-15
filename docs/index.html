@@ -11,7 +11,7 @@
         }
         .auth-card {
             max-width: 450px;
-            margin: 80px auto;
+            margin: 60px auto;
             border: none;
             border-radius: 12px;
         }
@@ -63,6 +63,16 @@
 
     </div>
 
+    <div id="dashboard-container" class="container d-none">
+        </div>
+
+    <script>
+        if (!window.location.hash || window.location.hash === '' || window.location.hash === '#') {
+            window.location.hash = '#dashboard';
+        }
+    </script>
+
     <script src="js/auth.js"></script>
+    <script src="js/router.js"></script>
 </body>
 </html>
