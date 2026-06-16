@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart City Portal</title>
+    <!-- CSS Bootstrap 5 & FontAwesome CDN Resmi -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         body { background-color: #f4f6f9; }
+        .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .auth-overlay-independen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -18,11 +20,13 @@
             justify-content: center;
         }
         .auth-card-box { width: 100%; max-width: 410px; border: none; border-radius: 16px; }
-        .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
 
+    <!-- ========================================================= -->
+    <!-- 1. GERBANG LOGIN INDEPENDEN (MENUTUPI LAYAR DI AWAL) -->
+    <!-- ========================================================= -->
     <div id="layar-kunci-login" class="auth-overlay-independen">
         <div class="container d-flex justify-content-center">
             <div class="card auth-card-box p-4 shadow-lg bg-white">
@@ -48,8 +52,11 @@
         </div>
     </div>
 
-
-    <div id="app" style="display: none;">
+    <!-- ========================================================= -->
+    <!-- 2. WADAH DASHBOARD (SELALU TERBUKA AGAR TIDAK PUTIH POLOS) -->
+    <!-- ========================================================= -->
+    <div id="app">
+        <!-- NAVBAR ATAS ASLI -->
         <nav class="navbar navbar-dark bg-primary shadow-sm mb-4 py-2">
             <div class="container-fluid px-4">
                 <span class="navbar-brand mb-0 h1 fw-bold"><i class="fa-solid fa-city me-2"></i>Smart City Portal</span>
@@ -58,6 +65,7 @@
 
         <div class="container-fluid px-4">
             <div class="row g-4">
+                <!-- SIDEBAR REKAP STATUS -->
                 <div class="col-12 col-md-3">
                     <div class="card card-custom p-3 bg-white mb-3">
                         <h5 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-clipboard-list me-2 text-primary"></i>Rekap Laporan</h5>
@@ -70,6 +78,7 @@
                     </div>
                 </div>
 
+                <!-- AREA KARTU KELUHAN -->
                 <div class="col-12 col-md-9">
                     <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
                         <div class="btn-group btn-group-sm">
@@ -80,6 +89,7 @@
                     </div>
 
                     <div class="row g-3" id="container-cards">
+                        <!-- Card 1: Jalan Rusak -->
                         <div class="col-12 col-sm-6">
                             <div class="card card-custom p-3 bg-white">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
@@ -95,6 +105,7 @@
                             </div>
                         </div>
 
+                        <!-- Card 2: Jalan -->
                         <div class="col-12 col-sm-6">
                             <div class="card card-custom p-3 bg-white">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
@@ -110,6 +121,7 @@
                             </div>
                         </div>
 
+                        <!-- Card 3: AA -->
                         <div class="col-12 col-sm-6">
                             <div class="card card-custom p-3 bg-white">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
@@ -131,8 +143,11 @@
         </div>
     </div>
 
+    <!-- ========================================================= -->
+    <!-- 3. INTERAKSI LOGIKA TOMBOL & ATURAN ROLE -->
+    <!-- ========================================================= -->
     <script>
-        // Proses eksekusi tombol masuk portal
+        // Logika klik tombol login independen
         document.getElementById('bypass-login-btn')?.addEventListener('click', function() {
             const user = document.getElementById('bypass-user').value.trim().toLowerCase();
             const pass = document.getElementById('bypass-pass').value.trim();
@@ -144,58 +159,47 @@
 
             alert(`Login Sukses! Selamat datang, ${user}.`);
             
-            // 1. Hilangkan gerbang login depan, tampilkan dashboard beneran
+            // Singkirkan topeng pelindung depan agar layout dashboard di belakangnya terekspos rapi
             document.getElementById('layar-kunci-login').style.setProperty('display', 'none', 'important');
-            document.getElementById('app').style.display = 'block';
-            window.location.hash = '#dashboard';
 
-            // 2. ATURAN JITU ROLE: Cek apakah yang masuk admin atau client (warga)
+            // Eksekusi Logika Role
             const tombolTambah = document.getElementById('btn-tambah-laporan');
             const listNamaPengirim = document.querySelectorAll('.nama-pengirim');
 
             if (user === 'admin') {
-                // Sesuai aturan: Admin GAK BISA nambahin laporan (disembunyikan)
-                tombolTambah.classList.add('d-none');
-                
-                // Tampilkan nama pengirim asli, bukan anonim
+                tombolTambah.classList.add('d-none'); // Admin tidak bisa tambah laporan
                 listNamaPengirim.forEach(el => {
                     el.innerHTML = `<i class="fa-solid fa-user-shield me-1 text-danger"></i> Oleh: mhs_tri_polinela`;
                 });
             } else {
-                // Sesuai aturan: Client (Warga) BISA nambahin laporan (ditampilkan)
-                tombolTambah.classList.remove('d-none');
-                
+                tombolTambah.classList.remove('d-none'); // Warga (Client) bisa tambah laporan
                 listNamaPengirim.forEach(el => {
                     el.innerHTML = `<i class="fa-solid fa-user me-1"></i> ${user}`;
                 });
             }
         });
 
-        // Fungsionalitas Tombol Keluar
+        // Tombol Keluar
         document.getElementById('btn-keluar-portal')?.addEventListener('click', function() {
-            window.location.hash = '';
             location.reload();
         });
 
-        // Interaksi Tab Menu
+        // Tab menu interaktif
         document.getElementById('btn-feed-kota')?.addEventListener('click', function() {
             this.classList.replace('btn-outline-primary', 'btn-primary');
             document.getElementById('btn-laporan-saya').classList.replace('btn-primary', 'btn-outline-primary');
-            alert('Memuat semua laporan se-kota...');
         });
 
         document.getElementById('btn-laporan-saya')?.addEventListener('click', function() {
             this.classList.replace('btn-outline-primary', 'btn-primary');
             document.getElementById('btn-feed-kota').classList.replace('btn-primary', 'btn-outline-primary');
         });
-
-        document.getElementById('btn-tambah-laporan')?.addEventListener('click', function() {
-            alert('Membuka form laporan warga baru untuk client...');
-        });
     </script>
 
+    <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
+    <!-- Script script penunjang bawaan lab -->
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/router.js"></script>
