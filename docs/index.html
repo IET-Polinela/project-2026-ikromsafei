@@ -7,71 +7,73 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Efek blur untuk latar belakang sebelum login sukses */
-        .blur-content {
-            filter: blur(8px);
-            pointer-events: none;
-            user-select: none;
+        body { background-color: #f4f6f9; }
+        .auth-wrapper {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #f4f6f9;
+            z-index: 99999; /* Memastikan kotak login berada paling depan mengunci layar */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        .auth-card { width: 100%; max-width: 420px; border: none; border-radius: 16px; }
     </style>
 </head>
 <body>
 
-    <div class="modal fade" id="authModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
-            <div class="modal-content border-0 shadow-lg rounded-4">
-                
-                <div id="login-box" class="modal-body p-4">
-                    <div class="text-center mb-4">
-                        <div class="bg-primary text-white d-inline-block p-3 rounded-circle mb-2 shadow">
-                            <i class="fa-solid fa-building-shield fa-2x"></i>
-                        </div>
-                        <h4 class="fw-bold m-0 text-dark">Smart City Portal</h4>
-                        <p class="text-muted small">Silakan login untuk mengakses dashboard</p>
+    <div id="auth-screen" class="auth-wrapper">
+        <div class="container d-flex justify-content-center">
+            
+            <div id="login-box" class="card auth-card p-4 shadow-lg bg-white">
+                <div class="text-center mb-4">
+                    <div class="bg-primary text-white d-inline-block p-3 rounded-circle mb-2 shadow">
+                        <i class="fa-solid fa-building-shield fa-2x"></i>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold text-secondary">Username</label>
-                        <input type="text" id="login-username" class="form-control py-2" placeholder="Masukkan username">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold text-secondary">Password</label>
-                        <input type="password" id="login-password" class="form-control py-2" placeholder="Masukkan password">
-                    </div>
-                    <button id="btn-login" class="btn btn-primary w-100 py-2 fw-bold rounded-3 mb-3">Masuk Portal</button>
-                    <p class="text-center small text-muted mb-0">Belum punya akun warga? <a href="#" id="link-ke-daftar" class="fw-bold text-decoration-none">Daftar di sini</a></p>
+                    <h4 class="fw-bold m-0 text-dark">Smart City Portal</h4>
+                    <p class="text-muted small">Silakan login untuk masuk ke sistem</p>
                 </div>
-
-                <div id="register-box" class="modal-body p-4 d-none">
-                    <div class="text-center mb-4">
-                        <div class="bg-success text-white d-inline-block p-3 rounded-circle mb-2 shadow">
-                            <i class="fa-solid fa-user-plus fa-2x"></i>
-                        </div>
-                        <h4 class="fw-bold m-0 text-dark">Daftar Akun Warga</h4>
-                        <p class="text-muted small">Layanan Mandiri Keluhan Masyarakat</p>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold text-secondary">Username Baru</label>
-                        <input type="text" id="reg-username" class="form-control py-2" placeholder="Buat nama pengguna">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold text-secondary">Password</label>
-                        <input type="password" id="reg-password" class="form-control py-2" placeholder="Buat kata sandi">
-                    </div>
-                    <button id="btn-register" class="btn btn-success w-100 py-2 fw-bold rounded-3 mb-3">Daftar Sekarang</button>
-                    <p class="text-center small text-muted mb-0">Sudah punya akun? <a href="#" id="link-ke-login" class="fw-bold text-decoration-none text-success">Login di sini</a></p>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary">Username</label>
+                    <input type="text" id="login-username" class="form-control py-2" placeholder="Masukkan username">
                 </div>
-
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary">Password</label>
+                    <input type="password" id="login-password" class="form-control py-2" placeholder="Masukkan password">
+                </div>
+                <button id="btn-login" class="btn btn-primary w-100 py-2 fw-bold rounded-3 mb-3">Masuk Portal</button>
+                <p class="text-center small text-muted mb-0">Belum punya akun? <a href="#" id="link-ke-daftar" class="fw-bold text-decoration-none">Daftar di sini</a></p>
             </div>
+
+            <div id="register-box" class="card auth-card p-4 shadow-lg bg-white d-none">
+                <div class="text-center mb-4">
+                    <div class="bg-success text-white d-inline-block p-3 rounded-circle mb-2 shadow">
+                        <i class="fa-solid fa-user-plus fa-2x"></i>
+                    </div>
+                    <h4 class="fw-bold m-0 text-dark">Daftar Akun Warga</h4>
+                    <p class="text-muted small">Sistem Pelaporan Keluhan Mandiri</p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary">Username Baru</label>
+                    <input type="text" id="reg-username" class="form-control py-2" placeholder="Buat nama pengguna">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary">Password</label>
+                    <input type="password" id="reg-password" class="form-control py-2" placeholder="Buat kata sandi">
+                </div>
+                <button id="btn-register" class="btn btn-success w-100 py-2 fw-bold rounded-3 mb-3">Daftar Sekarang</button>
+                <p class="text-center small text-muted mb-0">Sudah punya akun? <a href="#" id="link-ke-login" class="fw-bold text-decoration-none text-success">Login di sini</a></p>
+            </div>
+
         </div>
     </div>
 
 
-    <div id="app" class="blur-content">
-        </div>
+    <div id="app"></div>
 
 
     <script>
-        // Data Akun Awal di Browser
+        // Setup database akun lokal browser
         if (!localStorage.getItem('users')) {
             localStorage.setItem('users', JSON.stringify([
                 { username: 'admin', password: 'admin123' },
@@ -79,7 +81,7 @@
             ]));
         }
 
-        // Jalur navigasi form (Login <-> Register)
+        // Navigasi pindah form (Login <-> Register)
         document.getElementById('link-ke-daftar')?.addEventListener('click', function(e) {
             e.preventDefault();
             document.getElementById('login-box').classList.add('d-none');
@@ -91,23 +93,23 @@
             document.getElementById('login-box').classList.remove('d-none');
         });
 
-        // Logika Pendaftaran Warga Baru
+        // Fitur Registrasi Akun Warga Baru
         document.getElementById('btn-register')?.addEventListener('click', function() {
             const userBaru = document.getElementById('reg-username').value.trim();
             const passBaru = document.getElementById('reg-password').value.trim();
-            if (!userBaru || !passBaru) { alert('Data tidak boleh kosong!'); return; }
+            if (!userBaru || !passBaru) { alert('Form tidak boleh kosong!'); return; }
 
             let listUser = JSON.parse(localStorage.getItem('users')) || [];
             if (listUser.find(u => u.username === userBaru)) { alert('Username sudah terpakai!'); return; }
 
             listUser.push({ username: userBaru, password: passBaru });
             localStorage.setItem('users', JSON.stringify(listUser));
-            alert('Pendaftaran Sukses! Silakan melakukan login.');
+            alert('Pendaftaran Berhasil! Silakan Login.');
             document.getElementById('register-box').classList.add('d-none');
             document.getElementById('login-box').classList.remove('d-none');
         });
 
-        // Logika Eksekusi Validasi Login
+        // Fitur Eksekusi Login (Begitu Sukses, Penghalang Layar Langsung Dihancurkan)
         document.getElementById('btn-login')?.addEventListener('click', function() {
             const uIn = document.getElementById('login-username').value.trim();
             const pIn = document.getElementById('login-password').value.trim();
@@ -115,27 +117,23 @@
             const isMatch = listUser.find(u => u.username === uIn && u.password === pIn);
 
             if (isMatch) {
-                alert(`Login Sukses! Selamat datang kembali, ${uIn}.`);
+                alert(`Login Sukses! Selamat datang, ${uIn}.`);
                 
-                // 1. Lepas efek blur pada aplikasi asli hasil lab kalian
-                document.getElementById('app').classList.remove('blur-content');
+                // Hancurkan total layar penghalang login agar rekap aduan asli langsung terlihat jernih
+                document.getElementById('auth-screen').style.display = 'none';
                 
-                // 2. Tutup Pop-Up Gerbang Login secara paksa
-                const modalElement = document.getElementById('authModal');
-                const modalInstance = bootstrap.Modal.getInstance(modalElement);
-                modalInstance.hide();
-                
-                // 3. Set arah hash halaman default aplikasi kalian
+                // Beritahu router bawaan kelompokmu untuk pindah ke dashboard rekap keluhan
                 window.location.hash = '#dashboard';
             } else {
-                alert('Kesalahan: Kombinasi username atau password salah!');
+                alert('Eror: Username atau password salah!');
             }
         });
 
-        // Otomatis Munculkan Pop-up Login saat website pertama kali dimuat
-        document.addEventListener('DOMContentLoaded', () => {
-            const myModal = new bootstrap.Modal(document.getElementById('authModal'));
-            myModal.show();
+        // Cek jika halaman direload dalam keadaan sudah login
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.location.hash === '#dashboard' || window.location.hash === '#/dashboard') {
+                document.getElementById('auth-screen').style.display = 'none';
+            }
         });
     </script>
 
