@@ -8,12 +8,12 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         body { background-color: #f4f6f9; }
-        /* Mengunci layar penuh secara independen tanpa merusak element #app */
+        /* Mengunci layar penuh secara independen tanpa mengganggu render #app */
         .auth-overlay-independen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background-color: #f4f6f9;
-            z-index: 9999999; /* Berada di lapisan paling atas */
+            z-index: 9999999; /* Lapisan paling depan */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -47,8 +47,8 @@
                     <input type="password" id="bypass-pass" class="form-control py-2" placeholder="Masukkan password">
                 </div>
                 
-                <button id="bypass-login-btn" class="btn btn-primary w-100 py-2 fw-bold rounded-3 mb-3">
-                    Masuk Portal <i class="fa-solid fa-arrow-right-to-bracket ms-1"></i>
+                <button id="login-btn" name="bypass-login-btn" class="btn btn-primary w-100 py-2 fw-bold rounded-3 mb-3">
+                    Masuk Portal
                 </button>
             </div>
 
@@ -57,37 +57,35 @@
 
 
     <script>
-        function hancurkanLayarLogin() {
-            const layarKunci = document.getElementById('layar-kunci-login');
-            if (layarKunci) {
-                // Hancurkan total layar login terpisah agar tidak menghalangi dashboard asli kalian
-                layarKunci.style.setProperty('display', 'none', 'important');
+        function hilangkanTopengLogin() {
+            const topeng = document.getElementById('layar-kunci-login');
+            if (topeng) {
+                topeng.style.setProperty('display', 'none', 'important');
             }
         }
 
-        // Jalankan pengecekan klik tombol independen
-        document.getElementById('bypass-login-btn')?.addEventListener('click', function() {
+        // Tangkap langsung klik tombolnya tanpa ampun
+        document.getElementById('login-btn')?.addEventListener('click', function() {
             const userIn = document.getElementById('bypass-user').value.trim();
             const passIn = document.getElementById('bypass-pass').value.trim();
 
-            // Kamu bisa login pakai akun admin default ini atau akun server kalian Krom
-            if ((userIn === 'admin' && passIn === 'admin123') || userIn !== '') {
-                alert(`Login Sukses! Memuat Dashboard Kelompok...`);
+            if (userIn !== '' && passIn !== '') {
+                alert('Login Sukses! Membuka Dashboard...');
                 
-                // 1. Jalankan fungsi bypass visual
-                hancurkanLayarLogin();
+                // 1. Singkirkan penghalang layar depan
+                hilangkanTopengLogin();
                 
-                // 2. Paksa arahkan alamat url ke hash dashboard kelompokmu
+                // 2. Arahkan URL ke hash dashboard aslimu
                 window.location.hash = '#dashboard';
             } else {
-                alert('Kolom username dan password tidak boleh kosong!');
+                alert('Kolom username dan password wajib diisi Krom!');
             }
         });
 
-        // Jika halaman di-reload dan posisi URL sudah sukses berada di hash #dashboard, langsung hilangkan topengnya
+        // Auto-bypass jika halaman direload dan posisi hash sudah di #dashboard
         window.addEventListener('DOMContentLoaded', () => {
             if (window.location.hash === '#dashboard' || window.location.hash === '#/dashboard') {
-                hancurkanLayarLogin();
+                hilangkanTopengLogin();
             }
         });
     </script>
