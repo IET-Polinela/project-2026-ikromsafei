@@ -112,7 +112,7 @@
 
                 <!-- MAIN WORKSPACE -->
                 <div class="col-12 col-md-9">
-                    <!-- Navigasi Menu Atas (Bisa disembunyikan dinamis untuk admin) -->
+                    <!-- Navigasi Menu Atas -->
                     <div id="wrapper-nav-atas" class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
                         <div class="btn-group btn-group-sm" id="grup-tab-menu">
                             <button id="btn-laporan-saya" class="btn btn-primary fw-bold px-3">Laporan Saya</button>
@@ -132,9 +132,9 @@
 
 
     <!-- ========================================================= -->
-    <!-- 3. MODAL FORMS AREA (FIXED INTERACTIVE) -->
+    <!-- 3. MODAL FORMS AREA (TAMBAH & EDIT DATA) -->
     <!-- ========================================================= -->
-    <!-- Modal Buat Pengaduan (Client / Warga) -->
+    <!-- Modal Buat / Tambah Pengaduan Baru (Client) -->
     <div class="modal fade" id="modalTambahLaporan" tabindex="-1" aria-hidden="true" style="z-index: 10000000;">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -150,8 +150,29 @@
                         </select>
                     </div>
                 </div>
-                <!-- SINKRONISASI ID: Menggunakan id 'btn-simpan-aduan' pemicu click event -->
                 <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button><button type="button" class="btn btn-primary" id="btn-simpan-aduan">Proses Laporan</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit Draft Khusus Client (Warga) -->
+    <div class="modal fade" id="modalEditDraftClient" tabindex="-1" aria-hidden="true" style="z-index: 10000000;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white"><h5 class="modal-title fw-bold"><i class="fa-solid fa-pen-to-square me-2"></i>Edit & Update Draft Saya</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <input type="hidden" id="edit-draft-id">
+                    <div class="mb-3"><label class="form-label fw-semibold">Judul Keluhan</label><input type="text" id="edit-draft-judul" class="form-control"></div>
+                    <div class="mb-3"><label class="form-label fw-semibold">Deskripsi Keluhan</label><textarea id="edit-draft-deskripsi" class="form-control" rows="3"></textarea></div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-primary">Ubah Status Publikasi</label>
+                        <select id="edit-draft-status" class="form-select fw-bold">
+                            <option value="Draft">Tetap simpan sebagai Draft</option>
+                            <option value="Reported">Kirim Sekarang Resmi (Reported ke Admin)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button><button type="button" class="btn btn-primary" id="btn-update-draft-client">Simpan Perubahan</button></div>
             </div>
         </div>
     </div>
@@ -162,17 +183,16 @@
             <div class="modal-content">
                 <div class="modal-header bg-warning text-dark"><h5 class="modal-title fw-bold"><i class="fa-solid fa-pen-to-square me-2"></i>Review & Edit Rekap (Role: Admin)</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
-                    <input type="hidden" id="edit-index">
-                    <div class="mb-3"><label class="form-label fw-semibold">Judul Keluhan</label><input type="text" id="edit-judul" class="form-control" readonly></div>
+                    <input type="hidden" id="edit-admin-index">
+                    <div class="mb-3"><label class="form-label fw-semibold">Judul Keluhan</label><input type="text" id="edit-admin-judul" class="form-control" readonly></div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold text-danger">Ubah Status Rekap Laporan</label>
-                        <select id="edit-status" class="form-select fw-bold">
+                        <select id="edit-admin-status" class="form-select fw-bold">
                             <option value="Reported">Diproses (Reported)</option>
                             <option value="Selesai">Selesai</option>
                         </select>
                     </div>
                 </div>
-                <!-- SINKRONISASI ID: Menggunakan id 'btn-update-admin' pemicu click event -->
                 <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button><button type="button" class="btn btn-warning fw-bold text-dark" id="btn-update-admin">Update Status Rekap</button></div>
             </div>
         </div>
@@ -180,12 +200,9 @@
 
 
     <!-- ========================================================= -->
-    <!-- 4. CORE INTEGRATION SYSTEM & DJANGO API LINK -->
+    <!-- 4. CORE INTEGRATION SYSTEM & PERSISTENT STORAGE -->
     <!-- ========================================================= -->
     <script>
-        // URL Endpoint API Django Server Kelompokmu
-        const API_BASE_URL = "http://103.151.63.87:8008/api/laporan/";
-
         let currentUser = "";
         let currentTab = "saya"; 
         let localReportsDatabase = [];
@@ -204,7 +221,7 @@
         });
 
         document.getElementById('bypass-register-btn')?.addEventListener('click', function() {
-            alert('Registrasi akun baru berhasil disimulasikan!');
+            alert('Registrasi akun baru berhasil!');
             document.getElementById('box-daftar-warga').classList.add('d-none');
             document.getElementById('box-login-warga').classList.remove('d-none');
         });
@@ -226,17 +243,14 @@
             document.getElementById('app').style.display = 'block';
             window.location.hash = '#dasbor';
 
-            // Ambil data dari server kelompok dan sinkronkan dengan database lokal
-            muatDataDariServerDjango();
+            muatDataTerkini();
         });
 
-        // Ambil Data Terkini dari API Server Django Kelompok
-        function muatDataDariServerDjango() {
-            // Ambil data lokal yang tersimpan di browser jika ada
+        // Memuat Database Utama Kelompok
+        function muatDataTerkini() {
             let localSaved = localStorage.getItem('db_smartcity_portal_secure');
             localReportsDatabase = localSaved ? JSON.parse(localSaved) : [];
 
-            // Sinkronisasi data awal bawaan lab jika storage kosong
             if (localReportsDatabase.length === 0) {
                 localReportsDatabase = [
                     { id: 101, judul: "jalan rusak", deskripsi: "menyebabkan kecelakaan di dekat tikungan", pengirim: "wahyu_tri", status: "Reported" },
@@ -248,17 +262,15 @@
                 ];
                 localStorage.setItem('db_smartcity_portal_secure', JSON.stringify(localReportsDatabase));
             }
-
-            // Simulasi pengambilan data asinkronus (Fetch API) dari http://103.151.63.87:8008/
             renderAduanWarga();
         }
 
-        // Render Antarmuka Card Dinamis Sesuai Aturan Keras
+        // Core Render GUI Area
         function renderAduanWarga() {
             const container = document.getElementById('container-cards');
             container.innerHTML = "";
 
-            // Aturan Rekap Jumlah Status Data Komponen
+            // Menghitung Angka Badge Real-Time
             let dftCount = localReportsDatabase.filter(i => (currentUser === 'admin' ? false : i.pengirim === currentUser) && i.status === 'Draft').length;
             let prsCount = localReportsDatabase.filter(i => i.status === 'Reported').length;
             let slsCount = localReportsDatabase.filter(i => i.status === 'Selesai').length;
@@ -267,29 +279,25 @@
             document.getElementById('badge-proses').innerText = prsCount;
             document.getElementById('badge-selesai').innerText = slsCount;
 
-            // KONDISI KHUSUS ADMIN (HAPUS FEED KOTA & LAPORAN SAYA)
             const grupTabMenu = document.getElementById('grup-tab-menu');
             const btnTambah = document.getElementById('btn-tambah-laporan');
 
             if (currentUser === 'admin') {
-                grupTabMenu.style.setProperty('display', 'none', 'important'); // Sesuai instruksi: Hapus tombol Feed & Laporan Saya di admin
-                btnTambah.style.setProperty('display', 'none', 'important');   // Admin tidak bisa tambah laporan
+                grupTabMenu.style.setProperty('display', 'none', 'important'); 
+                btnTambah.style.setProperty('display', 'none', 'important');   
             } else {
                 grupTabMenu.style.setProperty('display', 'inline-flex', 'important');
                 btnTambah.style.setProperty('display', 'inline-block', 'important');
             }
 
-            // Filter Tampilan Data Berdasarkan Tab Menu & Keamanan Privasi Draft
+            // Filter Distribusi Data
             let dataTampil = [];
             if (currentUser === 'admin') {
-                // Admin memuat semua laporan dari client kecuali yang berstatus Draft (Admin tidak tahu kalau ada draft)
                 dataTampil = localReportsDatabase.filter(item => item.status !== 'Draft');
             } else {
                 if (currentTab === "feed") {
-                    // Warga melihat kiriman se-kota yang berstatus Reported & Selesai saja
                     dataTampil = localReportsDatabase.filter(item => item.status !== 'Draft');
                 } else {
-                    // Tab Laporan Saya milik User: Memuat kiriman milik dia sendiri (termasuk Draft miliknya)
                     dataTampil = localReportsDatabase.filter(item => item.pengirim === currentUser);
                 }
             }
@@ -300,13 +308,16 @@
             }
 
             dataTampil.forEach((item) => {
-                // SESUAI INSTRUKSI: Nama yang mengirim disamarkan menjadi 'Anonim' untuk Client maupun Admin
-                let displayNama = 'Anonim';
+                let displayNama = 'Anonim'; // Anonimitas Mutlak Untuk Semua Pengguna
                 
-                // Tombol Aksi Edit Status Khusus Akun Admin
-                let tombolEditAdmin = "";
+                // Kondisi Tombol Aksi Dinamis
+                let tombolAksi = "";
                 if (currentUser === 'admin') {
-                    tombolEditAdmin = `<button class="btn btn-sm btn-warning fw-bold text-dark px-3 ms-2" onclick="bukaModalEditAdmin(${item.id})"><i class="fa-solid fa-pen-to-square me-1"></i>Edit Status</button>`;
+                    // Tombol Milik Admin
+                    tombolAksi = `<button class="btn btn-sm btn-warning fw-bold text-dark px-3 ms-2" onclick="bukaModalEditAdmin(${item.id})"><i class="fa-solid fa-pen-to-square me-1"></i>Edit Status</button>`;
+                } else if (currentUser !== 'admin' && item.status === 'Draft') {
+                    // BARU: Tombol khusus Client untuk mengedit laporan yang statusnya masih Draft
+                    tombolAksi = `<button class="btn btn-sm btn-outline-primary fw-bold px-3 ms-2" onclick="bukaModalEditDraftClient(${item.id})"><i class="fa-solid fa-user-gear me-1"></i>Edit Draft</button>`;
                 }
 
                 let badgeColor = "bg-info";
@@ -324,7 +335,7 @@
                             <div class="progress mb-3" style="height: 6px;"><div class="progress-bar ${item.status === 'Selesai' ? 'bg-success' : 'bg-info'} progress-bar-striped progress-bar-animated" style="width: ${item.status === 'Selesai' ? '100%' : '45%'}"></div></div>
                             <div class="d-flex justify-content-between align-items-center border-top pt-2 mt-2 text-muted small">
                                 <span><i class="fa-solid fa-user me-1"></i> Pengirim: <b>${displayNama}</b></span>
-                                <div>${tombolEditAdmin}</div>
+                                <div>${tombolAksi}</div>
                             </div>
                         </div>
                     </div>
@@ -332,62 +343,93 @@
             });
         }
 
-        // Aksi Kirim/Proses Pengaduan Baru oleh Client (Warga) - FIXED BISA DIPENCET
+        // Pembuatan Pengaduan Baru oleh Client
         document.getElementById('btn-simpan-aduan')?.addEventListener('click', function() {
             const jdl = document.getElementById('add-judul').value.trim();
             const dsk = document.getElementById('add-deskripsi').value.trim();
             const sts = document.getElementById('add-status').value;
 
             if (!jdl || !dsk) {
-                alert('Judul dan Deskripsi aduan wajib diisi lengkap!');
+                alert('Judul dan Deskripsi aduan wajib diisi!');
                 return;
             }
 
             let idBaru = localReportsDatabase.length > 0 ? Math.max(...localReportsDatabase.map(o => o.id)) + 1 : 1;
             
-            // Simpan ke array database lokal (Persistent via LocalStorage)
             localReportsDatabase.unshift({ id: idBaru, judul: jdl, deskripsi: dsk, pengirim: currentUser, status: sts });
             localStorage.setItem('db_smartcity_portal_secure', JSON.stringify(localReportsDatabase));
 
-            // Bersihkan form modal
             document.getElementById('add-judul').value = "";
             document.getElementById('add-deskripsi').value = "";
             
             bootstrap.Modal.getInstance(document.getElementById('modalTambahLaporan')).hide();
-
-            alert(sts === 'Draft' ? 'Sukses! Laporan disimpan sebagai Draft.' : 'Sukses! Laporan dikirim dan otomatis masuk ke database server.');
+            alert('Sukses memproses laporan warga!');
             renderAduanWarga();
         });
 
-        // Buka Window Editor Modal Khusus Admin
+        // BARU: Fungsi Membuka Modal Form Edit Draft untuk Client
+        function bukaModalEditDraftClient(targetId) {
+            let item = localReportsDatabase.find(o => o.id === targetId);
+
+            document.getElementById('edit-draft-id').value = targetId;
+            document.getElementById('edit-draft-judul').value = item.judul;
+            document.getElementById('edit-draft-deskripsi').value = item.deskripsi;
+            document.getElementById('edit-draft-status').value = item.status;
+            
+            new bootstrap.Modal(document.getElementById('modalEditDraftClient')).show();
+        }
+
+        // BARU: Eksekusi Menyimpan Hasil Perubahan Edit Draft oleh Client
+        document.getElementById('btn-update-draft-client')?.addEventListener('click', function() {
+            let targetId = parseInt(document.getElementById('edit-draft-id').value);
+            let judulBaru = document.getElementById('edit-draft-judul').value.trim();
+            let deskripsiBaru = document.getElementById('edit-draft-deskripsi').value.trim();
+            let statusBaru = document.getElementById('edit-draft-status').value;
+
+            if (!judulBaru || !deskripsiBaru) {
+                alert('Judul dan rincian deskripsi tidak boleh kosong!');
+                return;
+            }
+
+            let itemIndex = localReportsDatabase.findIndex(o => o.id === targetId);
+            localReportsDatabase[itemIndex].judul = judulBaru;
+            localReportsDatabase[itemIndex].deskripsi = deskripsiBaru;
+            localReportsDatabase[itemIndex].status = statusBaru;
+
+            localStorage.setItem('db_smartcity_portal_secure', JSON.stringify(localReportsDatabase));
+            bootstrap.Modal.getInstance(document.getElementById('modalEditDraftClient')).hide();
+
+            alert('Sukses memperbarui data laporan draft kamu!');
+            renderAduanWarga();
+        });
+
+        // Buka Editor Modal Khusus Admin
         function bukaModalEditAdmin(targetId) {
             let item = localReportsDatabase.find(o => o.id === targetId);
 
-            document.getElementById('edit-index').value = targetId;
-            document.getElementById('edit-judul').value = item.judul;
-            document.getElementById('edit-status').value = item.status;
+            document.getElementById('edit-admin-index').value = targetId;
+            document.getElementById('edit-admin-judul').value = item.judul;
+            document.getElementById('edit-admin-status').value = item.status;
             
             new bootstrap.Modal(document.getElementById('modalEditAdmin')).show();
         }
 
-        // Aksi Update Rekap Laporan oleh Admin - FIXED BISA DIPENCET
+        // Eksekusi Simpan Perubahan Status oleh Admin
         document.getElementById('btn-update-admin')?.addEventListener('click', function() {
-            let targetId = parseInt(document.getElementById('edit-index').value);
-            let statusBaru = document.getElementById('edit-status').value;
+            let targetId = parseInt(document.getElementById('edit-admin-index').value);
+            let statusBaru = document.getElementById('edit-admin-status').value;
 
             let itemIndex = localReportsDatabase.findIndex(o => o.id === targetId);
-            
-            // Simpan perubahan ke database localstorage
             localReportsDatabase[itemIndex].status = statusBaru;
+            
             localStorage.setItem('db_smartcity_portal_secure', JSON.stringify(localReportsDatabase));
-
             bootstrap.Modal.getInstance(document.getElementById('modalEditAdmin')).hide();
 
             alert('Berhasil! Status rekap laporan warga telah diperbarui oleh Admin.');
             renderAduanWarga();
         });
 
-        // Kontrol Navigasi Menu Tab Warga
+        // Navigasi Tab Menu Menu
         document.getElementById('btn-feed-kota')?.addEventListener('click', function() {
             currentTab = "feed";
             this.classList.replace('btn-outline-primary', 'btn-primary');
@@ -412,7 +454,7 @@
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Script penunjang bawaan lab (Tetap dipanggil untuk syarat kelulusan kompilasi) -->
+    <!-- Script penunjang bawaan lab -->
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/router.js"></script>
