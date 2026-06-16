@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart City Portal - TRI Polinela</title>
+    <!-- CSS Bootstrap 5 & FontAwesome CDN Resmi -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -13,7 +14,11 @@
 </head>
 <body>
 
+    <!-- ========================================================= -->
+    <!-- 1. GERBANG AUTH (LOGIN & REGISTER) -->
+    <!-- ========================================================= -->
     <div id="auth-container" class="container">
+        <!-- Box Form Login -->
         <div id="login-box" class="card auth-card p-4 shadow-sm bg-white">
             <h3 class="text-center fw-bold text-dark mb-4">Login Portal Warga</h3>
             <div class="mb-3">
@@ -28,6 +33,7 @@
             <p class="text-center small text-muted mb-0">Belum punya akun? <a href="#" id="link-ke-daftar" class="text-decoration-none fw-bold">Daftar di sini</a></p>
         </div>
 
+        <!-- Box Form Daftar Warga -->
         <div id="register-box" class="card auth-card p-4 shadow-sm bg-white d-none">
             <h3 class="text-center fw-bold text-dark mb-4">Daftar Akun Warga</h3>
             <div class="mb-3">
@@ -47,11 +53,18 @@
         </div>
     </div>
 
-    <div id="app" class="d-none"></div>
+    <!-- ========================================================= -->
+    <!-- 2. WADAH UTAMA HASIL LAB GRUP ASLI (SUDAH DIBUKA) -->
+    <!-- ========================================================= -->
+    <!-- d-none dilepas agar script router kelompokmu bisa langsung merender konten -->
+    <div id="app"></div>
 
 
+    <!-- ========================================================= -->
+    <!-- 3. LOGIKA INTEGRASI KONTROL DAN SESSION -->
+    <!-- ========================================================= -->
     <script>
-        // Set Data User Lokal
+        // Setup database simulasi lokal browser
         if (!localStorage.getItem('users')) {
             localStorage.setItem('users', JSON.stringify([
                 { username: 'admin', password: 'admin123', role: 'admin' },
@@ -59,7 +72,7 @@
             ]));
         }
 
-        // Navigasi Box Form
+        // Jalur navigasi tukar box form login-register
         document.getElementById('link-ke-daftar')?.addEventListener('click', function(e) {
             e.preventDefault();
             document.getElementById('login-box').classList.add('d-none');
@@ -71,23 +84,23 @@
             document.getElementById('login-box').classList.remove('d-none');
         });
 
-        // Fitur Registrasi Warga
+        // Logika simpan pendaftaran akun baru
         document.getElementById('btn-register')?.addEventListener('click', function() {
             const username = document.getElementById('reg-username').value.trim();
             const password = document.getElementById('reg-password').value.trim();
-            if (!username || !password) { alert('Data tidak boleh kosong!'); return; }
+            if (!username || !password) { alert('Data registrasi tidak boleh kosong!'); return; }
 
             let users = JSON.parse(localStorage.getItem('users')) || [];
-            if (users.find(u => u.username === username)) { alert('Username sudah terpakai!'); return; }
+            if (users.find(u => u.username === username)) { alert('Username sudah terdaftar!'); return; }
 
             users.push({ username: username, password: password, role: 'warga' });
             localStorage.setItem('users', JSON.stringify(users));
-            alert('Pendaftaran Berhasil! Silakan Login.');
+            alert('Pendaftaran Berhasil! Silakan masuk kembali.');
             document.getElementById('register-box').classList.add('d-none');
             document.getElementById('login-box').classList.remove('d-none');
         });
 
-        // Fitur Validasi Login -> Menembus Router Asli Kelompok
+        // Logika verifikasi masuk portal
         document.getElementById('btn-login')?.addEventListener('click', function() {
             const uIn = document.getElementById('login-username').value.trim();
             const pIn = document.getElementById('login-password').value.trim();
@@ -96,35 +109,31 @@
 
             if (valid) {
                 alert('Login Sukses!');
-                // Sembunyikan Gerbang Login, Buka paksa Konten Utama #app
+                // Sembunyikan gerbang login, izinkan user melihat isi dashboard
                 document.getElementById('auth-container').classList.add('d-none');
-                document.getElementById('app').classList.remove('d-none');
                 
-                // Trigger alamat Hash Router bawaan kodingan lab kalian
+                // Memicu paksa router SPA kelompokmu untuk merender isi tabel rekap keluhan lab
                 window.location.hash = '#dashboard';
                 
-                // Cari dan jalankan fungsi routing bawaan dari router.js/app.js kalian
                 if (typeof initRouter === 'function') { initRouter(); }
                 else if (typeof handleRouting === 'function') { handleRouting(); }
                 else if (typeof router === 'function') { router(); }
-                else {
-                    // Jika router berupa object atau butuh reload manual untuk membaca hash baru
-                    location.reload();
-                }
             } else {
-                alert('Username atau Password Salah!');
+                alert('Username atau Password yang Anda masukkan salah!');
             }
         });
 
-        // Cek status jika halaman di-reload tapi user sudah sukses menembus hash #dashboard
+        // Amankan tampilan jika admin melakukan reload pada posisi hash #dashboard
         window.addEventListener('DOMContentLoaded', () => {
             if (window.location.hash === '#dashboard' || window.location.hash === '#/dashboard') {
                 document.getElementById('auth-container').classList.add('d-none');
-                document.getElementById('app').classList.remove('d-none');
             }
         });
     </script>
 
+    <!-- ========================================================= -->
+    <!-- 4. URUTAN EKSEKUSI JAVASCRIPT ASLI KELOMPOK (FIXED) -->
+    <!-- ========================================================= -->
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/router.js"></script>
