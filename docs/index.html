@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart City Portal - TRI Polinela</title>
+    <title>Smart City Portal</title>
+    <!-- CSS Bootstrap 5 & FontAwesome CDN Resmi (Wajib Online) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         body { background-color: #f4f6f9; }
-        .auth-wrapper {
+        /* Mengunci layar penuh untuk gerbang login native sebelum masuk */
+        .auth-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background-color: #f4f6f9;
-            z-index: 99999; /* Memastikan kotak login berada paling depan mengunci layar */
+            z-index: 999999;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -22,16 +24,20 @@
 </head>
 <body>
 
-    <div id="auth-screen" class="auth-wrapper">
+    <!-- ========================================================= -->
+    <!-- 1. LAYAR PENGUNCI LOGIN NATIVE (BERADA DI PALING DEPAN) -->
+    <!-- ========================================================= -->
+    <div id="auth-screen" class="auth-overlay">
         <div class="container d-flex justify-content-center">
             
+            <!-- BOX FORM LOGIN -->
             <div id="login-box" class="card auth-card p-4 shadow-lg bg-white">
                 <div class="text-center mb-4">
                     <div class="bg-primary text-white d-inline-block p-3 rounded-circle mb-2 shadow">
                         <i class="fa-solid fa-building-shield fa-2x"></i>
                     </div>
                     <h4 class="fw-bold m-0 text-dark">Smart City Portal</h4>
-                    <p class="text-muted small">Silakan login untuk masuk ke sistem</p>
+                    <p class="text-muted small">Silakan login untuk memantau keluhan warga</p>
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-secondary">Username</label>
@@ -45,13 +51,14 @@
                 <p class="text-center small text-muted mb-0">Belum punya akun? <a href="#" id="link-ke-daftar" class="fw-bold text-decoration-none">Daftar di sini</a></p>
             </div>
 
+            <!-- BOX FORM REGISTRASI WARGA -->
             <div id="register-box" class="card auth-card p-4 shadow-lg bg-white d-none">
                 <div class="text-center mb-4">
                     <div class="bg-success text-white d-inline-block p-3 rounded-circle mb-2 shadow">
                         <i class="fa-solid fa-user-plus fa-2x"></i>
                     </div>
                     <h4 class="fw-bold m-0 text-dark">Daftar Akun Warga</h4>
-                    <p class="text-muted small">Sistem Pelaporan Keluhan Mandiri</p>
+                    <p class="text-muted small">Sistem Layanan Pengaduan Mandiri</p>
                 </div>
                 <div class="mb-3">
                     <label class="form-label fw-semibold text-secondary">Username Baru</label>
@@ -68,12 +75,19 @@
         </div>
     </div>
 
-
+    <!-- ========================================================= -->
+    <!-- 2. WADAH UTAMA HASIL LAB KELOMPOKMU (ID HARUS #app) -->
+    <!-- ========================================================= -->
+    <!-- Kontainer ini dibiarkan polosan tanpa d-none agar saat halaman diload, -->
+    <!-- script router.js kelompokmu sukses merender seluruh card layout di belakang layar -->
     <div id="app"></div>
 
 
+    <!-- ========================================================= -->
+    <!-- 3. INTERAKSI VERIFIKASI AUTH & DOM DESTROYER -->
+    <!-- ========================================================= -->
     <script>
-        // Setup database akun lokal browser
+        // Inisialisasi Database Akun Lokal
         if (!localStorage.getItem('users')) {
             localStorage.setItem('users', JSON.stringify([
                 { username: 'admin', password: 'admin123' },
@@ -81,7 +95,7 @@
             ]));
         }
 
-        // Navigasi pindah form (Login <-> Register)
+        // Pindah Form (Login <-> Register)
         document.getElementById('link-ke-daftar')?.addEventListener('click', function(e) {
             e.preventDefault();
             document.getElementById('login-box').classList.add('d-none');
@@ -93,23 +107,23 @@
             document.getElementById('login-box').classList.remove('d-none');
         });
 
-        // Fitur Registrasi Akun Warga Baru
+        // Simpan Akun Baru
         document.getElementById('btn-register')?.addEventListener('click', function() {
             const userBaru = document.getElementById('reg-username').value.trim();
             const passBaru = document.getElementById('reg-password').value.trim();
-            if (!userBaru || !passBaru) { alert('Form tidak boleh kosong!'); return; }
+            if (!userBaru || !passBaru) { alert('Kolom pendaftaran tidak boleh kosong!'); return; }
 
             let listUser = JSON.parse(localStorage.getItem('users')) || [];
-            if (listUser.find(u => u.username === userBaru)) { alert('Username sudah terpakai!'); return; }
+            if (listUser.find(u => u.username === userBaru)) { alert('Username telah terdaftar!'); return; }
 
             listUser.push({ username: userBaru, password: passBaru });
             localStorage.setItem('users', JSON.stringify(listUser));
-            alert('Pendaftaran Berhasil! Silakan Login.');
+            alert('Registrasi Berhasil! Silakan masuk.');
             document.getElementById('register-box').classList.add('d-none');
             document.getElementById('login-box').classList.remove('d-none');
         });
 
-        // Fitur Eksekusi Login (Begitu Sukses, Penghalang Layar Langsung Dihancurkan)
+        // Logika Eksekusi Tombol Masuk Portal
         document.getElementById('btn-login')?.addEventListener('click', function() {
             const uIn = document.getElementById('login-username').value.trim();
             const pIn = document.getElementById('login-password').value.trim();
@@ -119,28 +133,35 @@
             if (isMatch) {
                 alert(`Login Sukses! Selamat datang, ${uIn}.`);
                 
-                // Hancurkan total layar penghalang login agar rekap aduan asli langsung terlihat jernih
-                document.getElementById('auth-screen').style.display = 'none';
+                // Hancurkan layar penghalang depan agar card keluhan asli di belakang langsung terekspos sempurna
+                document.getElementById('auth-screen').style.setProperty('display', 'none', 'important');
                 
-                // Beritahu router bawaan kelompokmu untuk pindah ke dashboard rekap keluhan
+                // Set hash URL ke dashboard bawaan lab
                 window.location.hash = '#dashboard';
             } else {
-                alert('Eror: Username atau password salah!');
+                alert('Kesalahan: Kombinasi username atau password salah!');
             }
         });
 
-        // Cek jika halaman direload dalam keadaan sudah login
+        // Jaga-jaga jika admin melakukan hard refresh posisi URL sudah di #dashboard
         window.addEventListener('DOMContentLoaded', () => {
             if (window.location.hash === '#dashboard' || window.location.hash === '#/dashboard') {
-                document.getElementById('auth-screen').style.display = 'none';
+                // Biarkan layar login mengunci di awal sampai user menekan masuk
+                if(document.getElementById('login-username').value === '') {
+                     window.location.hash = '';
+                }
             }
         });
     </script>
 
+    <!-- ========================================================= -->
+    <!-- 4. EKSEKUSI INTEGRASI SCRIPT UTAMA KELOMPOK LAB -->
+    <!-- ========================================================= -->
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/router.js"></script>
     <script src="js/app.js"></script>
+    <!-- Bootstrap JS Bundle Resmi -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
