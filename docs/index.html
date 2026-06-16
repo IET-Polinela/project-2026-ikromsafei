@@ -8,12 +8,191 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         body { background-color: #f4f6f9; }
+        .auth-overlay-independen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #f4f6f9;
+            z-index: 9999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .auth-card-box { width: 100%; max-width: 410px; border: none; border-radius: 16px; }
+        .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
 
-    <div id="app"></div>
+    <div id="layar-kunci-login" class="auth-overlay-independen">
+        <div class="container d-flex justify-content-center">
+            <div class="card auth-card-box p-4 shadow-lg bg-white">
+                <div class="text-center mb-4">
+                    <div class="bg-primary text-white d-inline-block p-3 rounded-circle mb-2 shadow">
+                        <i class="fa-solid fa-building-shield fa-2x"></i>
+                    </div>
+                    <h4 class="fw-bold m-0 text-dark">Smart City Portal</h4>
+                    <p class="text-muted small">Silakan login untuk memuat layanan warga</p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary">Username</label>
+                    <input type="text" id="bypass-user" class="form-control py-2" placeholder="Masukkan username">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold text-secondary">Password</label>
+                    <input type="password" id="bypass-pass" class="form-control py-2" placeholder="Masukkan password">
+                </div>
+                <button id="bypass-login-btn" class="btn btn-primary w-100 py-2 fw-bold rounded-3 mb-3">
+                    Masuk Portal
+                </button>
+            </div>
+        </div>
+    </div>
 
+
+    <div id="app" style="display: none;">
+        <nav class="navbar navbar-dark bg-primary shadow-sm mb-4 py-2">
+            <div class="container-fluid px-4">
+                <span class="navbar-brand mb-0 h1 fw-bold"><i class="fa-solid fa-city me-2"></i>Smart City Portal</span>
+            </div>
+        </nav>
+
+        <div class="container-fluid px-4">
+            <div class="row g-4">
+                <div class="col-12 col-md-3">
+                    <div class="card card-custom p-3 bg-white mb-3">
+                        <h5 class="fw-bold mb-3 text-dark"><i class="fa-solid fa-clipboard-list me-2 text-primary"></i>Rekap Laporan</h5>
+                        <ul class="list-group list-group-flush small">
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">Draft <span class="badge bg-secondary rounded-pill">0</span></li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">Diproses <span class="badge bg-warning text-dark rounded-pill fw-bold">3</span></li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">Selesai <span class="badge bg-success rounded-pill">0</span></li>
+                        </ul>
+                        <button class="btn btn-danger w-100 fw-bold mt-3 btn-sm" id="btn-keluar-portal"><i class="fa-solid fa-right-from-bracket me-1"></i> Keluar</button>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-9">
+                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                        <div class="btn-group btn-group-sm">
+                            <button id="btn-laporan-saya" class="btn btn-primary fw-bold px-3">Laporan Saya</button>
+                            <button id="btn-feed-kota" class="btn btn-outline-primary fw-bold px-3">Feed Kota</button>
+                        </div>
+                        <button id="btn-tambah-laporan" class="btn btn-primary btn-sm fw-bold rounded-2 px-3 d-none"><i class="fa-solid fa-plus me-1"></i> Tambah Laporan</button>
+                    </div>
+
+                    <div class="row g-3" id="container-cards">
+                        <div class="col-12 col-sm-6">
+                            <div class="card card-custom p-3 bg-white">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="fw-bold text-dark m-0">jalan rusak</h5>
+                                    <span class="badge bg-info text-white small">Reported</span>
+                                </div>
+                                <p class="text-muted small mb-3">menyebabkan kecelakaan</p>
+                                <div class="progress mb-3" style="height: 6px;"><div class="progress-bar bg-info progress-bar-striped progress-bar-animated" style="width: 40%"></div></div>
+                                <div class="d-flex justify-content-between align-items-center border-top pt-2 mt-2 text-muted small">
+                                    <span class="nama-pengirim"><i class="fa-solid fa-user me-1"></i> ikrom_warga_sukses</span>
+                                    <span class="badge bg-light text-dark border"><i class="fa-solid fa-lock me-1"></i>Terkunci</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <div class="card card-custom p-3 bg-white">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="fw-bold text-dark m-0">jalan</h5>
+                                    <span class="badge bg-info text-white small">Reported</span>
+                                </div>
+                                <p class="text-muted small mb-3">surak</p>
+                                <div class="progress mb-3" style="height: 6px;"><div class="progress-bar bg-info progress-bar-striped progress-bar-animated" style="width: 40%"></div></div>
+                                <div class="d-flex justify-content-between align-items-center border-top pt-2 mt-2 text-muted small">
+                                    <span class="nama-pengirim"><i class="fa-solid fa-user me-1"></i> ikrom_warga_sukses</span>
+                                    <span class="badge bg-light text-dark border"><i class="fa-solid fa-lock me-1"></i>Terkunci</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6">
+                            <div class="card card-custom p-3 bg-white">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="fw-bold text-dark m-0">aa</h5>
+                                    <span class="badge bg-info text-white small">Reported</span>
+                                </div>
+                                <p class="text-muted small mb-3">bbb</p>
+                                <div class="progress mb-3" style="height: 6px;"><div class="progress-bar bg-info progress-bar-striped progress-bar-animated" style="width: 40%"></div></div>
+                                <div class="d-flex justify-content-between align-items-center border-top pt-2 mt-2 text-muted small">
+                                    <span class="nama-pengirim"><i class="fa-solid fa-user me-1"></i> ikrom_warga_sukses</span>
+                                    <span class="badge bg-light text-dark border"><i class="fa-solid fa-lock me-1"></i>Terkunci</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Proses eksekusi tombol masuk portal
+        document.getElementById('bypass-login-btn')?.addEventListener('click', function() {
+            const user = document.getElementById('bypass-user').value.trim().toLowerCase();
+            const pass = document.getElementById('bypass-pass').value.trim();
+
+            if (user === "" || pass === "") {
+                alert('Username dan password tidak boleh kosong!');
+                return;
+            }
+
+            alert(`Login Sukses! Selamat datang, ${user}.`);
+            
+            // 1. Hilangkan gerbang login depan, tampilkan dashboard beneran
+            document.getElementById('layar-kunci-login').style.setProperty('display', 'none', 'important');
+            document.getElementById('app').style.display = 'block';
+            window.location.hash = '#dashboard';
+
+            // 2. ATURAN JITU ROLE: Cek apakah yang masuk admin atau client (warga)
+            const tombolTambah = document.getElementById('btn-tambah-laporan');
+            const listNamaPengirim = document.querySelectorAll('.nama-pengirim');
+
+            if (user === 'admin') {
+                // Sesuai aturan: Admin GAK BISA nambahin laporan (disembunyikan)
+                tombolTambah.classList.add('d-none');
+                
+                // Tampilkan nama pengirim asli, bukan anonim
+                listNamaPengirim.forEach(el => {
+                    el.innerHTML = `<i class="fa-solid fa-user-shield me-1 text-danger"></i> Oleh: mhs_tri_polinela`;
+                });
+            } else {
+                // Sesuai aturan: Client (Warga) BISA nambahin laporan (ditampilkan)
+                tombolTambah.classList.remove('d-none');
+                
+                listNamaPengirim.forEach(el => {
+                    el.innerHTML = `<i class="fa-solid fa-user me-1"></i> ${user}`;
+                });
+            }
+        });
+
+        // Fungsionalitas Tombol Keluar
+        document.getElementById('btn-keluar-portal')?.addEventListener('click', function() {
+            window.location.hash = '';
+            location.reload();
+        });
+
+        // Interaksi Tab Menu
+        document.getElementById('btn-feed-kota')?.addEventListener('click', function() {
+            this.classList.replace('btn-outline-primary', 'btn-primary');
+            document.getElementById('btn-laporan-saya').classList.replace('btn-primary', 'btn-outline-primary');
+            alert('Memuat semua laporan se-kota...');
+        });
+
+        document.getElementById('btn-laporan-saya')?.addEventListener('click', function() {
+            this.classList.replace('btn-outline-primary', 'btn-primary');
+            document.getElementById('btn-feed-kota').classList.replace('btn-primary', 'btn-outline-primary');
+        });
+
+        document.getElementById('btn-tambah-laporan')?.addEventListener('click', function() {
+            alert('Membuka form laporan warga baru untuk client...');
+        });
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
@@ -21,14 +200,5 @@
     <script src="js/auth.js"></script>
     <script src="js/router.js"></script>
     <script src="js/app.js"></script>
-
-    <script>
-        // Memastikan sistem langsung mengarah ke hash dashboard bawaan lab saat dibuka pertama kali
-        window.addEventListener('DOMContentLoaded', () => {
-            if (!window.location.hash || window.location.hash === '#') {
-                window.location.hash = '#dashboard';
-            }
-        });
-    </script>
 </body>
 </html>
