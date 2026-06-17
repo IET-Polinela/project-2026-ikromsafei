@@ -58,18 +58,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'smartcity_app.wsgi.application'
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'db_mhs08',        
         'USER': 'mhs08',          
-        'PASSWORD': 'password_db_kamu', 
+        'PASSWORD': 'mhs08', 
         'HOST': '127.0.0.1',      
         'PORT': '5432',           
     }
 }
-
 # Deklarasi Custom User Model (Lab 6)
 AUTH_USER_MODEL = 'usermanagement.CustomUser'
 
