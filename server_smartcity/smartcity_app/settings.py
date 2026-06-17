@@ -1,118 +1,257 @@
-import os
-from pathlib import Path
-from datetime import timedelta
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart City Portal - Pesawaran</title>
+    <!-- Bootstrap CSS Resmi -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome untuk Icon -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-brown: #6E4720;      /* Coklat Identik Kabupaten Pesawaran */
+            --dark-brown: #4A2E11;         /* Coklat Tua untuk Text & Hover */
+            --accent-gold: #D4AF37;        /* Aksen Emas Lembut */
+            --light-bg: #F9F6F0;           /* Background Krem Sangat Muda */
+            --sidebar-brown: #E3D4C1;      /* Coklat Susu untuk Sisi Kiri Boks */
+        }
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-SECRET_KEY = 'django-insecure-smartcity-super-secret-key'
-DEBUG = True
-ALLOWED_HOSTS = ALLOWED_HOSTS = ['103.151.63.87', '127.0.0.1', 'localhost']
+        /* NAVBAR ATAS TEMA COKLAT PESAWARAN */
+        .navbar-custom {
+            background-color: var(--primary-brown);
+            padding: 12px 0;
+            border-bottom: 3px solid var(--accent-gold);
+        }
+        .navbar-brand span {
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .nav-link {
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-link:hover {
+            color: var(--sidebar-brown) !important;
+        }
+        .btn-daftar-custom {
+            background-color: var(--accent-gold);
+            border: none;
+            color: #000 !important;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-daftar-custom:hover {
+            background-color: #C5A028;
+            transform: translateY(-1px);
+        }
 
-# Pendaftaran Aplikasi Utama & Pihak Ketiga (Lab 2, 3, 6, 9, 11)
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    
-    # Library Eksternal
-    'rest_framework',
-    'rest_framework_simplejwt',
-    'corsheaders',
-    
-    # Aplikasi Proyek Smart City
-    'main_app',
-    'usermanagement',
-]
+        /* CONTAINER UTAMA JADI DI TENGAH LAYAR (CENTERED SIMETRIS) */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+        }
 
-# Middleware (CorsMiddleware wajib diletakkan di paling atas) (Lab 11)
-MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+        /* CARD PORTAL LOGIN ELEGAN */
+        .card-login {
+            border: none;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(74, 46, 17, 0.12);
+            background-color: #ffffff;
+        }
 
-ROOT_URLCONF = 'smartcity_app.urls'
+        /* SISI KIRI (SIDEBAR INFO) */
+        .login-sidebar {
+            background: linear-gradient(135deg, #F0E5D8 0%, var(--sidebar-brown) 100%);
+            padding: 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .login-sidebar h2 {
+            color: var(--dark-brown);
+            line-height: 1.3;
+        }
+        .btn-tag {
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(110, 71, 32, 0.15);
+            color: var(--dark-brown);
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 10px;
+            padding: 10px;
+        }
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
+        /* SISI KANAN (FORM INPUT LOGIN ASLI KOTA IET) */
+        .form-section {
+            padding: 50px;
+        }
+        .form-control-custom {
+            background-color: #FDFBF7;
+            border: 1.5px solid #EAE5DC;
+            padding: 14px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+        .form-control-custom:focus {
+            background-color: #ffffff;
+            border-color: var(--primary-brown);
+            box-shadow: 0 0 0 3px rgba(110, 71, 32, 0.15);
+        }
+        .btn-login-custom {
+            background-color: var(--primary-brown);
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+        }
+        .btn-login-custom:hover {
+            background-color: var(--dark-brown);
+            transform: translateY(-2px);
+        }
 
-WSGI_APPLICATION = 'smartcity_app.wsgi.application'
+        /* JANGKAR SCROLL BAWAHAN (BIAR DIKLIK NAVBAR GAK EROR 404) */
+        .info-section {
+            background-color: #ffffff;
+            padding: 60px 0;
+            border-top: 1px solid #EAE5DC;
+        }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'db_mhs08',        
-        'USER': 'mhs08',          
-        'PASSWORD': 'password_db_kamu', 
-        'HOST': '127.0.0.1',      
-        'PORT': '5432',           
-    }
-}
+        footer {
+            background-color: #ffffff;
+            border-top: 1px solid #EAE5DC;
+            padding: 20px 0;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
 
-# Deklarasi Custom User Model (Lab 6)
-AUTH_USER_MODEL = 'usermanagement.CustomUser'
+    <!-- ============================================================================== -->
+    <!-- NAVBAR ATAS (LINK ID SCROLL) -->
+    <!-- ============================================================================== -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex flex-column" href="/">
+                <span><i class="fa-solid fa-city text-warning me-2"></i>Pesawaran</span>
+                <span class="fw-normal text-white-50" style="font-size: 0.7rem; margin-top: 2px;">Kehidupan Cerdas, Harmoni Perkotaan</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-4 me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" href="/">🏠 Rumah</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#tentang">ℹ️ Tentang</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#kontak">📞 Kontak</a></li>
+                </ul>
+                <div class="d-flex">
+                    <a href="#daftar" class="btn btn-daftar-custom px-4 rounded-pill shadow-sm">Daftar</a>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-LANGUAGE_CODE = 'id'
-TIME_ZONE = 'Asia/Jakarta'
-USE_I18N = True
-USE_TZ = True
-STATIC_URL = 'static/'
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+    <!-- ============================================================================== -->
+    <!-- MAIN LOGIN CARDS -->
+    <!-- ============================================================================== -->
+    <div class="container main-wrapper">
+        <div class="col-xl-10 col-lg-11">
+            <div class="card card-login">
+                <div class="row g-0">
+                    
+                    <!-- Sisi Kiri -->
+                    <div class="col-md-5 login-sidebar">
+                        <div class="mb-4">
+                            <i class="fa-solid fa-chart-pie display-4" style="color: var(--primary-brown);"></i>
+                        </div>
+                        <h2 class="fw-bold mb-3">Suara Anda ,<br>Perubahan Nyata</h2>
+                        <p class="text-muted" style="font-size: 0.95rem; line-height: 1.6;">Laporkan masalah infrastruktur di sekitar Anda, dan biarkan sistem memproses penanganan secara transparan.</p>
+                        
+                        <div class="row g-2 mt-3">
+                            <div class="col-6"><div class="btn-tag text-center shadow-sm">Aduan Cepat</div></div>
+                            <div class="col-6"><div class="btn-tag text-center shadow-sm">Status Pantau</div></div>
+                            <div class="col-6"><div class="btn-tag text-center shadow-sm">Infrastruktur</div></div>
+                            <div class="col-6"><div class="btn-tag text-center shadow-sm">Aksi Nyata</div></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sisi Kanan (Form Post Login Dikembalikan Sesuai Logic Asli Kota IET) -->
+                    <div class="col-md-7 form-section bg-white d-flex flex-column justify-content-center">
+                        <div class="text-center mb-4">
+                            <i class="fa-solid fa-user-shield text-warning display-6 mb-2"></i>
+                            <h3 class="fw-bold text-dark mb-1">Masuk ke Portal</h3>
+                            <p class="text-muted small">Gunakan username dan kata sandi Anda untuk mengakses dashboard.</p>
+                        </div>
+                        
+                        <!-- Mengarah ke "" (diri sendiri) agar diproses oleh fungsi View Login asli kelompokmu -->
+                        <form method="POST" action="">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label class="form-label text-dark small fw-bold">Username</label>
+                                <input type="text" name="username" class="form-control form-control-custom" placeholder="Masukkan nama pengguna" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label text-dark small fw-bold">Kata sandi</label>
+                                <input type="password" name="password" class="form-control form-control-custom" placeholder="Masukkan kata sandi" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-login-custom w-100 text-white shadow">Masuk Ke Portal</button>
+                        </form>
+                    </div>
 
-# Konfigurasi DRF Global Authentication & SimpleJWT (Lab 10)
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-}
+                </div>
+            </div>
+        </div>
+    </div>
 
-# Manajemen Durasi Sesi Token JWT (Lab 10)
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
-}
+    <!-- ============================================================================== -->
+    <!-- BAGIAN SEKSI JANGKAR BAWAHAN (KOTA IET ORIGINAL FLOW) -->
+    <!-- ============================================================================== -->
+    <div id="tentang" class="info-section">
+        <div class="container text-center">
+            <h4 class="fw-bold" style="color: var(--primary-brown);">Tentang Portal</h4>
+            <p class="text-muted">Sistem Layanan Pengaduan Masyarakat Kabupaten Pesawaran berbasis web.</p>
+        </div>
+    </div>
 
-# Mengizinkan Akses Komunikasi Lintas Domain dari Frontend SPA (Lab 11)
-CORS_ALLOW_ALL_ORIGINS = True
+    <div id="kontak" class="info-section" style="background-color: #FDFBF7;">
+        <div class="container text-center">
+            <h4 class="fw-bold" style="color: var(--primary-brown);">Kontak Kami</h4>
+            <p class="text-muted">Hubungi administrator sistem melalui portal pengaduan resmi daerah.</p>
+        </div>
+    </div>
 
-# ==============================================================================
-# KONFIGURASI DEPLOYMENT LAB 13 (CORS & STATIC ROOT)
-# ==============================================================================
+    <div id="daftar" class="info-section">
+        <div class="container text-center">
+            <h4 class="fw-bold" style="color: var(--primary-brown);">Pendaftaran Akun Baru</h4>
+            <p class="text-muted">Silakan hubungi admin kesekretariatan untuk pembuatan kredensial akses login portal.</p>
+        </div>
+    </div>
 
-# Izinkan server diakses dari host mana pun di internet [cite: 1251, 1252]
-ALLOWED_HOSTS = ['*']
+    <!-- ============================================================================== -->
+    <!-- FOOTER SEPERTI ASLI BERSIH TANPA LEMBAGA -->
+    <!-- ============================================================================== -->
+    <footer class="text-center text-muted">
+        <div class="container">
+            <p class="mb-0">&copy; 2026 <span style="color: var(--primary-brown); font-weight: 700;">Pesawaran</span>.</p>
+        </div>
+    </footer>
 
-# Mengizinkan akses lintas origin agar frontend SPA tidak CORS Error [cite: 1247, 1253]
-CORS_ALLOW_ALL_ORIGINS = True
-
-# Lokasi folder untuk mengumpulkan file statis DRF saat deployment [cite: 1254, 1255]
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-CSRF_TRUSTED_ORIGINS = [
-    'http://103.151.63.87:8008',
-    'http://103.151.63.87',
-    'https://iet-polinela.github.io'
-]
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
