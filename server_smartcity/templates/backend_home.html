@@ -52,7 +52,7 @@
             transform: translateY(-1px);
         }
 
-        /* CONTAINER UTAMA BIAR DI TENGAH LAYAR (CENTERED) */
+        /* CONTAINER UTAMA (CENTERED) */
         .main-wrapper {
             flex: 1;
             display: flex;
@@ -61,7 +61,7 @@
             padding: 40px 0;
         }
 
-        /* CARD PORTAL LOGIN LEBIH BAGUS */
+        /* CARD PORTAL LOGIN */
         .card-login {
             border: none;
             border-radius: 24px;
@@ -70,14 +70,13 @@
             background-color: #ffffff;
         }
 
-        /* SISI KIRI (SIDEBAR INFO) */
+        /* SISI KIRI */
         .login-sidebar {
             background: linear-gradient(135deg, #F0E5D8 0%, var(--sidebar-brown) 100%);
             padding: 45px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            position: relative;
         }
         .login-sidebar h2 {
             color: var(--dark-brown);
@@ -91,11 +90,6 @@
             font-weight: 500;
             border-radius: 10px;
             padding: 10px;
-            transition: all 0.2s;
-        }
-        .btn-tag:hover {
-            background-color: #ffffff;
-            border-color: var(--primary-brown);
         }
 
         /* SISI KANAN (FORM INPUT) */
@@ -126,10 +120,15 @@
         .btn-login-custom:hover {
             background-color: var(--dark-brown);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(74, 46, 17, 0.2);
         }
 
-        /* FOOTER BAWAH */
+        /* SECTION UNTUK JANGKAR LINK BAWAHAN (KOTA IET ORIGINAL FLOW) */
+        .info-section {
+            background-color: #ffffff;
+            padding: 60px 0;
+            border-top: 1px solid #EAE5DC;
+        }
+
         footer {
             background-color: #ffffff;
             border-top: 1px solid #EAE5DC;
@@ -152,11 +151,11 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-4 me-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link active" href="/">🏠 Rumah</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/admin/">ℹ️ Tentang</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/admin/">📞 Kontak</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#tentang">ℹ️ Tentang</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#kontak">📞 Kontak</a></li>
                 </ul>
                 <div class="d-flex">
-                    <a href="/admin/" class="btn btn-daftar-custom px-4 rounded-pill shadow-sm">Daftar</a>
+                    <a href="#daftar" class="btn btn-daftar-custom px-4 rounded-pill shadow-sm">Daftar</a>
                 </div>
             </div>
         </div>
@@ -189,7 +188,7 @@
                             <p class="text-muted small">Gunakan username dan kata sandi Anda untuk mengakses dashboard.</p>
                         </div>
                         
-                        <form method="POST" action="/admin/login/">
+                        <form method="POST" action="">
                             {% csrf_token %}
                             <div class="mb-3">
                                 <label class="form-label text-dark small fw-bold">Username</label>
@@ -205,6 +204,27 @@
 
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div id="tentang" class="info-section">
+        <div class="container text-center">
+            <h4 class="fw-bold" style="color: var(--primary-brown);">Tentang Portal</h4>
+            <p class="text-muted">Sistem Layanan Pengaduan Masyarakat Kabupaten Pesawaran berbasis web.</p>
+        </div>
+    </div>
+
+    <div id="kontak" class="info-section style-reply" style="background-color: #FDFBF7;">
+        <div class="container text-center">
+            <h4 class="fw-bold" style="color: var(--primary-brown);">Kontak Kami</h4>
+            <p class="text-muted">Hubungi administrator sistem melalui portal pengaduan resmi daerah.</p>
+        </div>
+    </div>
+
+    <div id="daftar" class="info-section">
+        <div class="container text-center">
+            <h4 class="fw-bold" style="color: var(--primary-brown);">Pendaftaran Akun Baru</h4>
+            <p class="text-muted">Silakan hubungi admin kesekretariatan untuk pembuatan kredensial akses login portal.</p>
         </div>
     </div>
 
