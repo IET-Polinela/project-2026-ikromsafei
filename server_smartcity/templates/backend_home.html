@@ -4,132 +4,231 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart City Portal - Pesawaran</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome untuk Icon -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Mengubah warna tema utama menjadi Coklat Identik Kabupaten Pesawaran */
+        :root {
+            --primary-brown: #6E4720;      /* Coklat Premium Kabupaten Pesawaran */
+            --dark-brown: #4A2E11;         /* Coklat Tua untuk Text & Hover */
+            --accent-gold: #D4AF37;        /* Aksen Emas Lembut */
+            --light-bg: #F9F6F0;           /* Background Krem Sangat Muda */
+            --sidebar-brown: #E3D4C1;      /* Coklat Susu untuk Sisi Kiri Boks */
+        }
+
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* NAVBAR ATAS */
         .navbar-custom {
-            background-color: #8B5A2B; /* Coklat Tua Sesuai Identitas Pesawaran */
+            background-color: var(--primary-brown);
+            padding: 12px 0;
+            border-bottom: 3px solid var(--accent-gold);
         }
-        .btn-info {
-            background-color: #CD853F; /* Coklat Muda / Peru */
-            border-color: #CD853F;
-            color: white !important;
+        .navbar-brand span {
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
-        .btn-info:hover {
-            background-color: #B8860B;
-            border-color: #B8860B;
+        .nav-link {
+            font-weight: 500;
+            transition: color 0.2s;
         }
-        .text-info {
-            color: #D2B48C !important; /* Warna Krem/Coklat Muda Ringan untuk Icon */
+        .nav-link:hover {
+            color: var(--sidebar-brown) !important;
         }
-        /* Style asli bawaan tetap dipertahankan */
-        .login-container {
-            min-height: 80vh;
+        .btn-daftar-custom {
+            background-color: var(--accent-gold);
+            border: none;
+            color: #000 !important;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-daftar-custom:hover {
+            background-color: #C5A028;
+            transform: translateY(-1px);
+        }
+
+        /* CONTAINER UTAMA BIAR DI TENGAH LAYAR (CENTERED) */
+        .main-wrapper {
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 40px 0;
         }
+
+        /* CARD PORTAL LOGIN LEBIH BAGUS */
         .card-login {
             border: none;
-            border-radius: 20px;
+            border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 35px rgba(74, 46, 17, 0.12);
+            background-color: #ffffff;
         }
+
+        /* SISI KIRI (SIDEBAR INFO) */
         .login-sidebar {
-            background: linear-gradient(135deg, #E6D7C3 0%, #C4A482 100%); /* Gradasi Coklat Lembut */
-            padding: 40px;
+            background: linear-gradient(135deg, #F0E5D8 0%, var(--sidebar-brown) 100%);
+            padding: 45px;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            position: relative;
         }
-        .btn-primary-custom {
-            background-color: #8B5A2B;
-            border: none;
-            padding: 12px;
+        .login-sidebar h2 {
+            color: var(--dark-brown);
+            line-height: 1.3;
+        }
+        .btn-tag {
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(110, 71, 32, 0.15);
+            color: var(--dark-brown);
+            font-size: 0.85rem;
+            font-weight: 500;
             border-radius: 10px;
-            font-weight: bold;
+            padding: 10px;
+            transition: all 0.2s;
+        }
+        .btn-tag:hover {
+            background-color: #ffffff;
+            border-color: var(--primary-brown);
+        }
+
+        /* SISI KANAN (FORM INPUT) */
+        .form-section {
+            padding: 50px;
+        }
+        .form-control-custom {
+            background-color: #FDFBF7;
+            border: 1.5px solid #EAE5DC;
+            padding: 14px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+        .form-control-custom:focus {
+            background-color: #ffffff;
+            border-color: var(--primary-brown);
+            box-shadow: 0 0 0 3px rgba(110, 71, 32, 0.15);
+        }
+        .btn-login-custom {
+            background-color: var(--primary-brown);
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
             transition: all 0.3s;
         }
-        .btn-primary-custom:hover {
-            background-color: #5C3A1A;
+        .btn-login-custom:hover {
+            background-color: var(--dark-brown);
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 46, 17, 0.2);
+        }
+
+        /* FOOTER BAWAH */
+        footer {
+            background-color: #ffffff;
+            border-top: 1px solid #EAE5DC;
+            padding: 20px 0;
+            font-size: 0.85rem;
         }
     </style>
 </head>
-<body class="bg-light">
+<body>
 
-    <nav class="navbar navbar-expand-lg navbar-custom navbar-dark shadow-sm">
+    <!-- ============================================================================== -->
+    <!-- NAVBAR ATAS -->
+    <!-- ============================================================================== -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex flex-column" href="/">
-                <span><i class="fa-solid fa-city text-info me-2"></i>Pesawaran</span>
+                <span><i class="fa-solid fa-city text-warning me-2"></i>Pesawaran</span>
                 <span class="fw-normal text-white-50" style="font-size: 0.7rem; margin-top: 2px;">Kehidupan Cerdas, Harmoni Perkotaan</span>
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-3 me-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav ms-4 me-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link active" href="/">🏠 Rumah</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">ℹ️ Tentang</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">📞 Kontak</a></li>
                 </ul>
-                <div class="d-flex gap-2">
-                    <a href="#" class="btn btn-info fw-bold px-4 rounded-pill shadow-sm">Daftar</a>
+                <div class="d-flex">
+                    <a href="/register/" class="btn btn-daftar-custom px-4 rounded-pill shadow-sm">Daftar</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="container login-container my-4">
-        <div class="col-lg-10">
+    <!-- ============================================================================== -->
+    <!-- CONTAINER UTAMA (BIAR DI TENGAH LAYAR) -->
+    <!-- ============================================================================== -->
+    <div class="container main-wrapper">
+        <div class="col-xl-10 col-lg-11">
             <div class="card card-login">
                 <div class="row g-0">
-                    <div class="col-md-5 login-sidebar text-dark">
+                    
+                    <!-- Sisi Kiri: Informasi Sistem -->
+                    <div class="col-md-5 login-sidebar">
                         <div class="mb-4">
-                            <i class="fa-solid fa-chart-pie text-dark display-4" style="opacity: 0.7;"></i>
+                            <i class="fa-solid fa-chart-pie display-4" style="color: var(--primary-brown);"></i>
                         </div>
                         <h2 class="fw-bold mb-3">Suara Anda ,<br>Perubahan Nyata</h2>
-                        <p class="text-muted lead" style="font-size: 1rem;">Laporkan masalah infrastruktur di sekitar Anda, dan biarkan sistem memproses penanganan secara transparan.</p>
-                        <div class="row g-2 mt-4">
-                            <div class="col-6"><span class="btn btn-light w-100 btn-sm text-muted rounded-3 py-2">Aduan Cepat</span></div>
-                            <div class="col-6"><span class="btn btn-light w-100 btn-sm text-muted rounded-3 py-2">Status Pantau</span></div>
-                            <div class="col-6"><span class="btn btn-light w-100 btn-sm text-muted rounded-3 py-2">Infrastruktur</span></div>
-                            <div class="col-6"><span class="btn btn-light w-100 btn-sm text-muted rounded-3 py-2">Aksi Nyata</span></div>
+                        <p class="text-muted" style="font-size: 0.95rem; line-height: 1.6;">Laporkan masalah infrastruktur di sekitar Anda, dan biarkan sistem memproses penanganan secara transparan.</p>
+                        
+                        <div class="row g-2 mt-3">
+                            <div class="col-6"><div class="btn-tag text-center shadow-sm">Aduan Cepat</div></div>
+                            <div class="col-6"><div class="btn-tag text-center shadow-sm">Status Pantau</div></div>
+                            <div class="col-6"><div class="btn-tag text-center shadow-sm">Infrastruktur</div></div>
+                            <div class="col-6"><div class="btn-tag text-center shadow-sm">Aksi Nyata</div></div>
                         </div>
                     </div>
                     
-                    <div class="col-md-7 p-5 bg-white d-flex flex-column justify-content-center">
+                    <!-- Sisi Kanan: Form Input Login Sistem -->
+                    <div class="col-md-7 form-section bg-white d-flex flex-column justify-content-center">
                         <div class="text-center mb-4">
                             <i class="fa-solid fa-user-shield text-warning display-6 mb-2"></i>
-                            <h3 class="fw-bold text-dark">Masuk ke Portal</h3>
+                            <h3 class="fw-bold text-dark mb-1">Masuk ke Portal</h3>
                             <p class="text-muted small">Gunakan username dan kata sandi Anda untuk mengakses dashboard.</p>
                         </div>
                         
+                        <!-- Atribut Pengiriman Form Django Dikembalikan Sempurna -->
                         <form method="POST" action="">
                             {% csrf_token %}
                             <div class="mb-3">
                                 <label class="form-label text-dark small fw-bold">Username</label>
-                                <input type="text" name="username" class="form-control bg-light p-3 border-0 rounded-3" placeholder="Masukkan nama pengguna" required>
+                                <input type="text" name="username" class="form-control form-control-custom" placeholder="Masukkan nama pengguna" required>
                             </div>
                             <div class="mb-4">
                                 <label class="form-label text-dark small fw-bold">Kata sandi</label>
-                                <input type="password" name="password" class="form-control bg-light p-3 border-0 rounded-3" placeholder="Masukkan kata sandi" required>
+                                <input type="password" name="password" class="form-control form-control-custom" placeholder="Masukkan kata sandi" required>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-primary-custom w-100 text-white shadow-sm">Masuk Ke Portal</button>
+                            <button type="submit" class="btn btn-primary btn-login-custom w-100 text-white shadow">Masuk Ke Portal</button>
                         </form>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
 
-    <footer class="text-center py-4 bg-light border-top mt-auto">
+    <!-- ============================================================================== -->
+    <!-- FOOTER BAWAH -->
+    <!-- ============================================================================== -->
+    <footer class="text-center text-muted">
         <div class="container">
-            <p class="mb-0 text-muted small">&copy; 2026 <span style="color: #8B5A2B; font-weight: bold;">Pesawaran</span>.</p>
+            <p class="mb-0">&copy; 2026 <span style="color: var(--primary-brown); font-weight: 700;">Pesawaran</span>.</p>
         </div>
     </footer>
 
+    <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
