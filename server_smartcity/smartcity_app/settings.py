@@ -6,9 +6,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-smartcity-super-secret-key'
 DEBUG = True
-ALLOWED_HOSTS = ALLOWED_HOSTS = ['103.151.63.87', '127.0.0.1', 'localhost']
 
-# Pendaftaran Aplikasi Utama & Pihak Ketiga (Lab 2, 3, 6, 9, 11)
+# Izinkan server diakses dari host mana pun di internet saat deploy
+ALLOWED_HOSTS = ['*']
+
+# Pendaftaran Aplikasi Utama & Pihak Ketiga (Lab 2, 3, 6, 9, 11, 14)
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -19,6 +21,8 @@ INSTALLED_APPS = [
     
     # Library Eksternal
     'rest_framework',
+    'drf_spectacular',
+    'django_scalar',
     'rest_framework_simplejwt',
     'corsheaders',
     
@@ -27,7 +31,7 @@ INSTALLED_APPS = [
     'usermanagement',
 ]
 
-# Middleware (CorsMiddleware wajib diletakkan di paling atas) (Lab 11)
+# Middleware (CorsMiddleware diletakkan di paling atas)
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -58,6 +62,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'smartcity_app.wsgi.application'
+
+# Koneksi Database Kredensial Asli Kelompok mhs08
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -68,6 +74,7 @@ DATABASES = {
         'PORT': '5432',           
     }
 }
+
 # Deklarasi Custom User Model (Lab 6)
 AUTH_USER_MODEL = 'usermanagement.CustomUser'
 
@@ -78,8 +85,9 @@ USE_TZ = True
 STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Konfigurasi DRF Global Authentication & SimpleJWT (Lab 10)
+# Konfigurasi DRF Global Authentication & SimpleJWT (Lab 10, 14)
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',[cite: 1]
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
@@ -93,20 +101,10 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
 }
 
-# Mengizinkan Akses Komunikasi Lintas Domain dari Frontend SPA (Lab 11)
+# Mengizinkan akses lintas origin agar frontend SPA tidak CORS Error
 CORS_ALLOW_ALL_ORIGINS = True
 
-# ==============================================================================
-# KONFIGURASI DEPLOYMENT LAB 13 (CORS & STATIC ROOT)
-# ==============================================================================
-
-# Izinkan server diakses dari host mana pun di internet [cite: 1251, 1252]
-ALLOWED_HOSTS = ['*']
-
-# Mengizinkan akses lintas origin agar frontend SPA tidak CORS Error [cite: 1247, 1253]
-CORS_ALLOW_ALL_ORIGINS = True
-
-# Lokasi folder untuk mengumpulkan file statis DRF saat deployment [cite: 1254, 1255]
+# Lokasi folder untuk mengumpulkan file statis DRF saat deployment
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 CSRF_TRUSTED_ORIGINS = [
@@ -114,3 +112,11 @@ CSRF_TRUSTED_ORIGINS = [
     'http://103.151.63.87',
     'https://iet-polinela.github.io'
 ]
+
+# Metadata OpenAPI-based Documentation Lab 14[cite: 1]
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Smart City Portal API - Pesawaran',[cite: 1]
+    'DESCRIPTION': 'Dokumentasi REST API resmi untuk Portal Pelaporan Laporan Warga',[cite: 1]
+    'VERSION': '1.0.0',[cite: 1]
+    'SERVE_INCLUDE_SCHEMA': False,[cite: 1]
+}

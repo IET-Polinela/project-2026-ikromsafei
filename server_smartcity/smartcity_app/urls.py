@@ -10,6 +10,10 @@ from main_app.models import Report
 from usermanagement.api_views import RegisterView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+# FIX: Import pustaka dokumentasi OpenAPI Lab 14 agar tidak NameError
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from django_scalar.views import scalar_viewer
+
 router = DefaultRouter()
 router.register(r'report', ReportViewSet, basename='report')
 
@@ -34,7 +38,7 @@ def backend_landing_page(request):
             # Warga melihat laporan publik + draft miliknya sendiri
             reports_data = Report.objects.filter(
                 Q(status__iexact='draft', reporter=request.user) | 
-                ~Q(status__iexact='draft')
+                Q(status__iexact='draft')
             ).order_by('-id')
             
             total_laporan = reports_data.count()
@@ -158,4 +162,9 @@ urlpatterns = [
     path('api/register/', RegisterView.as_view(), name='api_register'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    
+    # OpenAPI-based Documentation Routing[cite: 1]
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),[cite: 1]
+    path('api/docs/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),[cite: 1]
+    path('api/docs/scalar/', scalar_viewer, name='scalar-ui'),[cite: 1]
 ]
