@@ -138,6 +138,9 @@
 </head>
 <body>
 
+    <!-- ============================================================================== -->
+    <!-- NAVBAR (TETAP MENJAGA FUNGSI MODAL POPUP KELOMPOKMU) -->
+    <!-- ============================================================================== -->
     <nav class="navbar navbar-expand-lg navbar-custom navbar-dark shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex flex-column" href="/">
@@ -165,6 +168,7 @@
         </div>
     </nav>
 
+    <!-- ALERT SISTEM MESSAGES -->
     <div class="container mt-3">
         {% if messages %}
             {% for message in messages %}
@@ -176,6 +180,9 @@
         {% endif %}
     </div>
 
+    <!-- ============================================================================== -->
+    <!-- INTERFACE LOGIN (DIBUAT SIMETRIS TENGAH DAN WARNA COKLAT) -->
+    <!-- ============================================================================== -->
     {% if not user.is_authenticated %}
     <div class="container my-auto">
         <div class="portal-container row mx-auto">
@@ -195,6 +202,7 @@
                 </div>
             </div>
 
+            <!-- Form Action POST Menggunakan Fungsi Asli Kelompokmu -->
             <form action="{% url 'login_frontend' %}" method="POST" class="col-md-7 portal-right d-flex flex-column justify-content-center">
                 {% csrf_token %}
                 <div class="text-center mb-4">
@@ -215,6 +223,9 @@
         </div>
     </div>
 
+    <!-- ============================================================================== -->
+    <!-- INTERFACE DASHBOARD UTAMA SETELAH LOGIN -->
+    <!-- ============================================================================== -->
     {% else %}
     <div class="container my-4 mb-5">
         
@@ -335,7 +346,8 @@
                                             <a href="{% url 'hapus_laporan_frontend' report.id %}" class="btn btn-sm btn-danger border" onclick="return confirm('Apakah Anda yakin ingin menghapus aduan ini?')" title="Hapus"><i class="fa-solid fa-trash"></i></a>
                                         {% endif %}
 
-                                        {% if not user.is_staff and not user.is_superuser family report.status|upper == 'DRAFT' %}
+                                        <!-- DI SINI TYPO SUDAH DI-FIX DARI family MENJADI and -->
+                                        {% if not user.is_staff and not user.is_superuser and report.status|upper == 'DRAFT' %}
                                             <button class="btn btn-sm btn-warning border text-white" data-bs-toggle="modal" data-bs-target="#modalEditDraft{{ report.id }}" title="Edit Draft"><i class="fa-solid fa-pencil"></i></button>
                                         {% endif %}
                                     </div>
@@ -352,8 +364,16 @@
     </div>
     {% endif %}
 
+    <!-- ============================================================================== -->
+    <!-- FOOTER BERSIH SAMA SEPERTI ASLI TANPA NAMA INSTANSI -->
+    <!-- ============================================================================== -->
     <footer><div class="container fw-medium">© 2026 <span style="color: var(--primary-brown); font-weight: 700;">Pesawaran</span>.</div></footer>
 
+    <!-- ============================================================================== -->
+    <!-- ALL MODAL POPUPS (DIJAGA PENUH FUNGSIONALITASNYA) -->
+    <!-- ============================================================================== -->
+    
+    <!-- MODAL EDIT STATUS STAFF -->
     {% if user.is_staff or user.is_superuser %}
         {% for report in reports %}
         <div class="modal fade" id="modalEditStatus{{ report.id }}" tabindex="-1" aria-hidden="true">
@@ -394,6 +414,7 @@
         {% endfor %}
     {% endif %}
 
+    <!-- MODAL EDIT DRAFT WARGA -->
     {% if not user.is_staff and not user.is_superuser %}
         {% for report in reports %}
             {% if report.status|upper == 'DRAFT' %}
@@ -433,6 +454,7 @@
         {% endfor %}
     {% endif %}
 
+    <!-- MODAL REGISTER WARGA -->
     <div class="modal fade" id="modalRegister" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
@@ -460,6 +482,7 @@
         </div>
     </div>
 
+    <!-- MODAL TAMBAH LAPORAN -->
     <div class="modal fade" id="modalTambahLaporan" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
@@ -490,6 +513,7 @@
         </div>
     </div>
 
+    <!-- MODAL TENTANG -->
     <div class="modal fade" id="modalTentang" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
@@ -511,6 +535,7 @@
         </div>
     </div>
 
+    <!-- MODAL KONTAK -->
     <div class="modal fade" id="modalKontak" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
