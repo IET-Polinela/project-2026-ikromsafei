@@ -3,36 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Citizen Portal - Pesawaran</title>
-    <!-- Bootstrap CSS -->
+    <title>Smart City Portal - Pesawaran</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome untuk Icon -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* Mengubah warna tema utama menjadi Coklat Identik Kabupaten Pesawaran */
         .navbar-custom {
-            background-color: #0f2c59;
+            background-color: #8B5A2B; /* Coklat Tua Sesuai Identitas Pesawaran */
         }
-        .main-container {
-            min-height: 85vh;
+        .btn-info {
+            background-color: #CD853F; /* Coklat Muda / Peru */
+            border-color: #CD853F;
+            color: white !important;
+        }
+        .btn-info:hover {
+            background-color: #B8860B;
+            border-color: #B8860B;
+        }
+        .text-info {
+            color: #D2B48C !important; /* Warna Krem/Coklat Muda Ringan untuk Icon */
+        }
+        /* Style asli bawaan tetap dipertahankan */
+        .login-container {
+            min-height: 80vh;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .portal-card {
+        .card-login {
             border: none;
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
-        .portal-sidebar {
-            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+        .login-sidebar {
+            background: linear-gradient(135deg, #E6D7C3 0%, #C4A482 100%); /* Gradasi Coklat Lembut */
             padding: 40px;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
         .btn-primary-custom {
-            background-color: #007bff;
+            background-color: #8B5A2B;
             border: none;
             padding: 12px;
             border-radius: 10px;
@@ -40,16 +52,13 @@
             transition: all 0.3s;
         }
         .btn-primary-custom:hover {
-            background-color: #0056b3;
+            background-color: #5C3A1A;
             transform: translateY(-2px);
         }
     </style>
 </head>
 <body class="bg-light">
 
-    <!-- ============================================================================== -->
-    <!-- NAVBAR ATAS (SUDAH JADI PESAWARAN) -->
-    <!-- ============================================================================== -->
     <nav class="navbar navbar-expand-lg navbar-custom navbar-dark shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex flex-column" href="/">
@@ -61,40 +70,35 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-3 me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="/">🏠 Rumah</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/">🏠 Rumah</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">ℹ️ Tentang</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">📞 Kontak</a></li>
                 </ul>
                 <div class="d-flex gap-2">
-                    <a href="#" class="btn btn-info text-dark fw-bold px-4 rounded-pill shadow-sm">Daftar</a>
+                    <a href="#" class="btn btn-info fw-bold px-4 rounded-pill shadow-sm">Daftar</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- ============================================================================== -->
-    <!-- MAIN INTERFACE -->
-    <!-- ============================================================================== -->
-    <div class="container main-container my-4">
+    <div class="container login-container my-4">
         <div class="col-lg-10">
-            <div class="card portal-card">
+            <div class="card card-login">
                 <div class="row g-0">
-                    <!-- Sisi Kiri (Informasi/Visual) -->
-                    <div class="col-md-5 portal-sidebar text-dark">
+                    <div class="col-md-5 login-sidebar text-dark">
                         <div class="mb-4">
-                            <i class="fa-solid fa-chart-pie text-primary display-4"></i>
+                            <i class="fa-solid fa-chart-pie text-dark display-4" style="opacity: 0.7;"></i>
                         </div>
                         <h2 class="fw-bold mb-3">Suara Anda ,<br>Perubahan Nyata</h2>
                         <p class="text-muted lead" style="font-size: 1rem;">Laporkan masalah infrastruktur di sekitar Anda, dan biarkan sistem memproses penanganan secara transparan.</p>
                         <div class="row g-2 mt-4">
-                            <div class="col-6"><span class="btn btn-white w-100 btn-sm text-muted rounded-3 py-2 border shadow-sm">Aduan Cepat</span></div>
-                            <div class="col-6"><span class="btn btn-white w-100 btn-sm text-muted rounded-3 py-2 border shadow-sm">Status Pantau</span></div>
-                            <div class="col-6"><span class="btn btn-white w-100 btn-sm text-muted rounded-3 py-2 border shadow-sm">Infrastruktur</span></div>
-                            <div class="col-6"><span class="btn btn-white w-100 btn-sm text-muted rounded-3 py-2 border shadow-sm">Aksi Nyata</span></div>
+                            <div class="col-6"><span class="btn btn-light w-100 btn-sm text-muted rounded-3 py-2">Aduan Cepat</span></div>
+                            <div class="col-6"><span class="btn btn-light w-100 btn-sm text-muted rounded-3 py-2">Status Pantau</span></div>
+                            <div class="col-6"><span class="btn btn-light w-100 btn-sm text-muted rounded-3 py-2">Infrastruktur</span></div>
+                            <div class="col-6"><span class="btn btn-light w-100 btn-sm text-muted rounded-3 py-2">Aksi Nyata</span></div>
                         </div>
                     </div>
                     
-                    <!-- Sisi Kanan (Form Input Login) -->
                     <div class="col-md-7 p-5 bg-white d-flex flex-column justify-content-center">
                         <div class="text-center mb-4">
                             <i class="fa-solid fa-user-shield text-warning display-6 mb-2"></i>
@@ -102,14 +106,15 @@
                             <p class="text-muted small">Gunakan username dan kata sandi Anda untuk mengakses dashboard.</p>
                         </div>
                         
-                        <form id="loginForm">
+                        <form method="POST" action="">
+                            {% csrf_token %}
                             <div class="mb-3">
                                 <label class="form-label text-dark small fw-bold">Username</label>
-                                <input type="text" class="form-control bg-light p-3 border-0 rounded-3" placeholder="Masukkan nama pengguna" required>
+                                <input type="text" name="username" class="form-control bg-light p-3 border-0 rounded-3" placeholder="Masukkan nama pengguna" required>
                             </div>
                             <div class="mb-4">
                                 <label class="form-label text-dark small fw-bold">Kata sandi</label>
-                                <input type="password" class="form-control bg-light p-3 border-0 rounded-3" placeholder="Masukkan kata sandi" required>
+                                <input type="password" name="password" class="form-control bg-light p-3 border-0 rounded-3" placeholder="Masukkan kata sandi" required>
                             </div>
                             <button type="submit" class="btn btn-primary btn-primary-custom w-100 text-white shadow-sm">Masuk Ke Portal</button>
                         </form>
@@ -119,16 +124,12 @@
         </div>
     </div>
 
-    <!-- ============================================================================== -->
-    <!-- FOOTER BAWAH (SUDAH DIGANTI MENJADI BADAN DIGITALISASI DAERAH PESAWARAN) -->
-    <!-- ============================================================================== -->
     <footer class="text-center py-4 bg-light border-top mt-auto">
         <div class="container">
-            <p class="mb-0 text-muted small">&copy; 2026 <span class="text-primary fw-bold">Pesawaran</span> – Badan Digitalisasi Daerah Pesawaran.</p>
+            <p class="mb-0 text-muted small">&copy; 2026 <span style="color: #8B5A2B; font-weight: bold;">Pesawaran</span>.</p>
         </div>
     </footer>
 
-    <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
