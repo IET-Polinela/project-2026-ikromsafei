@@ -3,70 +3,458 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Warga Smart City Tracker</title>
+    <title>Smart City Portal</title>
+    <!-- CSS Bootstrap 5 & FontAwesome CDN Resmi -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f4f6f9; }
-        .spa-container { min-height: calc(100vh - 80px); }
+        body { background-color: #f4f6f9; min-height: 100vh; display: flex; flex-direction: column; margin: 0; }
+        .card-custom { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        
+        /* Layout Auth Sesuai Gambar Full Screen */
+        .auth-overlay-independen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #f4f6f9;
+            z-index: 9999999;
+            display: flex;
+            flex-direction: column;
+        }
+        .auth-container-center {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .auth-card-box { width: 100%; max-width: 480px; border: none; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); padding: 35px !important; }
+        .w-100-nav { width: 100% !important; margin: 0 !important; border-radius: 0 !important; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand fw-bold" href="#"><i class="bi bi-buildings-fill me-2"></i>Smart City Portal</a>
-            <div id="nav-menus" class="ms-auto"></div>
-        </div>
-    </nav>
-
-    <main class="container-fluid px-4 mt-4 spa-container" id="app-content"></main>
-
-    <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title fw-bold" id="reportModalLabel"><i class="bi bi-pencil-square me-2"></i>Form Laporan</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- ========================================================= -->
+    <!-- 1. GERBANG AUTH SCREEN (LOGIN & REGISTER) -->
+    <!-- ========================================================= -->
+    <div id="layar-kunci-login" class="auth-overlay-independen">
+        <nav class="navbar navbar-dark bg-primary shadow-sm py-3 w-100-nav">
+            <div class="container-fluid px-4">
+                <span class="navbar-brand mb-0 h1 fw-bold"><i class="fa-solid fa-building-columns me-2"></i>Smart City Portal</span>
+            </div>
+        </nav>
+        
+        <div class="auth-container-center">
+            <!-- BOX LOGIN -->
+            <div id="box-login-warga" class="card auth-card-box bg-white">
+                <div class="text-center mb-4"><h2 class="fw-bold text-dark" style="letter-spacing: -0.5px;">Login Warga</h2></div>
+                <div class="mb-3">
+                    <label class="form-label text-secondary fw-semibold small">Username</label>
+                    <input type="text" id="bypass-user" class="form-control py-2 bg-light" placeholder="Username">
                 </div>
-                <div class="modal-body p-4">
-                    <form id="reportForm">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Judul Masalah</label>
-                            <input type="text" id="formTitle" class="form-control" placeholder="Contoh: Lampu Jalan Padam" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Kategori Masalah</label>
-                            <select id="formCategory" class="form-select" required>
-                                <option value="Jalan Rusak">Jalan Rusak</option>
-                                <option value="Sampah">Sampah</option>
-                                <option value="Lampu Mati">Lampu Mati</option>
-                                <option value="Drainase">Drainase</option>
-                                <option value="Keamanan">Keamanan</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Lokasi Detail Kejadian</label>
-                            <input type="text" id="formLocation" class="form-control" placeholder="Nama jalan, RT/RW, kecamatan" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Deskripsi Kronologi Lengkap</label>
-                            <textarea id="formDescription" class="form-control" rows="3" placeholder="Ceritakan detail keluhan Anda..." required></textarea>
-                        </div>
-                        
-                        <div class="d-flex justify-content-between mt-4">
-                            <button type="button" class="btn btn-outline-secondary fw-bold px-4" id="btnDraft" onclick="submitForm('DRAFT')">Simpan Draft</button>
-                            <button type="button" class="btn btn-primary fw-bold px-4" id="btnSubmit" onclick="submitForm('REPORTED')">
-                                <i class="bi bi-send-fill me-1"></i>Ajukan
-                            </button>
-                        </div>
-                    </form>
+                <div class="mb-4">
+                    <label class="form-label text-secondary fw-semibold small">Password</label>
+                    <input type="password" id="bypass-pass" class="form-control py-2 bg-light" placeholder="Password">
+                </div>
+                <button id="bypass-login-btn" class="btn btn-primary w-100 py-2 fw-semibold rounded-2 mb-3">Masuk</button>
+                <div class="text-center small text-muted">
+                    Belum punya akun? <a href="#" id="link-daftar" class="text-decoration-none">Daftar di sini</a>
+                </div>
+            </div>
+
+            <!-- BOX REGISTER -->
+            <div id="box-daftar-warga" class="card auth-card-box bg-white d-none">
+                <div class="text-center mb-4"><h2 class="fw-bold text-dark" style="letter-spacing: -0.5px;">Daftar Akun</h2></div>
+                <div class="mb-3">
+                    <label class="form-label text-secondary fw-semibold small">Nama Lengkap</label>
+                    <input type="text" class="form-control py-2 bg-light" placeholder="Nama Lengkap">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-secondary fw-semibold small">Username Baru</label>
+                    <input type="text" class="form-control py-2 bg-light" placeholder="Username">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label text-secondary fw-semibold small">Password</label>
+                    <input type="password" class="form-control py-2 bg-light" placeholder="Buat Password">
+                </div>
+                <button id="bypass-register-btn" class="btn btn-success w-100 py-2 fw-semibold rounded-2 mb-3">Registrasi Akun</button>
+                <div class="text-center small text-muted">
+                    Sudah punya akun? <a href="#" id="link-login" class="text-decoration-none">Login di sini</a>
                 </div>
             </div>
         </div>
     </div>
 
+
+    <!-- ========================================================= -->
+    <!-- 2. DASHBOARD MAIN APPLICATION -->
+    <!-- ========================================================= -->
+    <div id="app" style="display: none;">
+        <nav class="navbar navbar-dark bg-primary shadow-sm mb-4 py-3 w-100-nav">
+            <div class="container-fluid px-4">
+                <span class="navbar-brand mb-0 h1 fw-bold"><i class="fa-solid fa-building-columns me-2"></i>Smart City Portal</span>
+            </div>
+        </nav>
+
+        <div class="container-fluid px-4">
+            <div class="row g-4">
+                <!-- SIDEBAR STATUS REKAP -->
+                <div class="col-12 col-md-3">
+                    <div class="card card-custom p-3 bg-white mb-3">
+                        <h5 class="fw-bold mb-3 text-dark">Rekap Laporan</h5>
+                        <ul class="list-group list-group-flush small">
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">Draft <span class="badge bg-secondary rounded-pill" id="badge-draft">0</span></li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">Diproses <span class="badge bg-warning text-dark rounded-pill fw-bold" id="badge-proses">0</span></li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">Selesai <span class="badge bg-success rounded-pill" id="badge-selesai">0</span></li>
+                        </ul>
+                        <button class="btn btn-danger w-100 fw-bold mt-3 btn-sm" id="btn-keluar-portal"><i class="fa-solid fa-right-from-bracket me-1"></i> Keluar</button>
+                    </div>
+                </div>
+
+                <!-- MAIN WORKSPACE -->
+                <div class="col-12 col-md-9">
+                    <!-- Navigasi Menu Atas -->
+                    <div id="wrapper-nav-atas" class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                        <div class="btn-group btn-group-sm" id="grup-tab-menu">
+                            <button id="btn-laporan-saya" class="btn btn-primary fw-bold px-3">Laporan Saya</button>
+                            <button id="btn-feed-kota" class="btn btn-outline-primary fw-bold px-3">Feed Kota</button>
+                        </div>
+                        <button id="btn-tambah-laporan" class="btn btn-primary btn-sm fw-bold rounded-2 px-3" data-bs-toggle="modal" data-bs-target="#modalTambahLaporan">
+                            <i class="fa-solid fa-plus me-1"></i> Tambah Laporan
+                        </button>
+                    </div>
+
+                    <!-- GRID DAFTAR CARD LAPORAN -->
+                    <div class="row g-3" id="container-cards"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- 3. MODAL FORMS AREA (TAMBAH & EDIT DATA) -->
+    <!-- ========================================================= -->
+    <!-- Modal Buat / Tambah Pengaduan Baru (Client) -->
+    <div class="modal fade" id="modalTambahLaporan" tabindex="-1" aria-hidden="true" style="z-index: 10000000;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header"><h5 class="modal-title fw-bold">Buat Pengaduan Warga Baru</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <div class="mb-3"><label class="form-label">Judul Keluhan</label><input type="text" id="add-judul" class="form-control" placeholder="Contoh: Lampu Jalan Mati"></div>
+                    <div class="mb-3"><label class="form-label">Deskripsi Lengkap Masalah</label><textarea id="add-deskripsi" class="form-control" rows="3" placeholder="Tulis rincian keluhan..."></textarea></div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Status Awal Laporan</label>
+                        <select id="add-status" class="form-select">
+                            <option value="Draft">Simpan sebagai Draft (Hanya Dilihat Saya & Sembunyi dari Admin)</option>
+                            <option value="Reported">Kirim Langsung (Diproses Admin & Masuk Feed)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button><button type="button" class="btn btn-primary" id="btn-simpan-aduan">Proses Laporan</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit Draft Khusus Client (Warga) -->
+    <div class="modal fade" id="modalEditDraftClient" tabindex="-1" aria-hidden="true" style="z-index: 10000000;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white"><h5 class="modal-title fw-bold"><i class="fa-solid fa-pen-to-square me-2"></i>Edit & Update Draft Saya</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <input type="hidden" id="edit-draft-id">
+                    <div class="mb-3"><label class="form-label fw-semibold">Judul Keluhan</label><input type="text" id="edit-draft-judul" class="form-control"></div>
+                    <div class="mb-3"><label class="form-label fw-semibold">Deskripsi Keluhan</label><textarea id="edit-draft-deskripsi" class="form-control" rows="3"></textarea></div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-primary">Ubah Status Publikasi</label>
+                        <select id="edit-draft-status" class="form-select fw-bold">
+                            <option value="Draft">Tetap simpan sebagai Draft</option>
+                            <option value="Reported">Kirim Sekarang Resmi (Reported ke Admin)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button><button type="button" class="btn btn-primary" id="btn-update-draft-client">Simpan Perubahan</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit Status Rekap Laporan (Khusus Admin) -->
+    <div class="modal fade" id="modalEditAdmin" tabindex="-1" aria-hidden="true" style="z-index: 10000000;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark"><h5 class="modal-title fw-bold"><i class="fa-solid fa-pen-to-square me-2"></i>Review & Edit Rekap (Role: Admin)</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <input type="hidden" id="edit-admin-index">
+                    <div class="mb-3"><label class="form-label fw-semibold">Judul Keluhan</label><input type="text" id="edit-admin-judul" class="form-control" readonly></div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-danger">Ubah Status Rekap Laporan</label>
+                        <select id="edit-admin-status" class="form-select fw-bold">
+                            <option value="Reported">Diproses (Reported)</option>
+                            <option value="Selesai">Selesai</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button><button type="button" class="btn btn-warning fw-bold text-dark" id="btn-update-admin">Update Status Rekap</button></div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- 4. CORE INTEGRATION SYSTEM & PERSISTENT STORAGE -->
+    <!-- ========================================================= -->
+    <script>
+        let currentUser = "";
+        let currentTab = "saya"; 
+        let localReportsDatabase = [];
+
+        // Penanganan Switch Tampilan Autentikasi
+        document.getElementById('link-daftar')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('box-login-warga').classList.add('d-none');
+            document.getElementById('box-daftar-warga').classList.remove('d-none');
+        });
+
+        document.getElementById('link-login')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('box-daftar-warga').classList.add('d-none');
+            document.getElementById('box-login-warga').classList.remove('d-none');
+        });
+
+        document.getElementById('bypass-register-btn')?.addEventListener('click', function() {
+            alert('Registrasi akun baru berhasil!');
+            document.getElementById('box-daftar-warga').classList.add('d-none');
+            document.getElementById('box-login-warga').classList.remove('d-none');
+        });
+
+        // Event Klik Tombol Masuk Portal
+        document.getElementById('bypass-login-btn')?.addEventListener('click', function() {
+            const user = document.getElementById('bypass-user').value.trim();
+            const pass = document.getElementById('bypass-pass').value.trim();
+
+            if (!user || !pass) {
+                alert('Kolom login tidak boleh kosong!');
+                return;
+            }
+
+            currentUser = user.toLowerCase();
+            alert(`Login Sukses! Hak Akses Role: ${user}`);
+
+            document.getElementById('layar-kunci-login').style.setProperty('display', 'none', 'important');
+            document.getElementById('app').style.display = 'block';
+            window.location.hash = '#dasbor';
+
+            muatDataTerkini();
+        });
+
+        // Memuat Database Utama Kelompok
+        function muatDataTerkini() {
+            let localSaved = localStorage.getItem('db_smartcity_portal_secure');
+            localReportsDatabase = localSaved ? JSON.parse(localSaved) : [];
+
+            if (localReportsDatabase.length === 0) {
+                localReportsDatabase = [
+                    { id: 101, judul: "jalan rusak", deskripsi: "menyebabkan kecelakaan di dekat tikungan", pengirim: "wahyu_tri", status: "Reported" },
+                    { id: 102, judul: "jalan", deskripsi: "surak dan berlubang parah", pengirim: "nopal_kembar", status: "Reported" },
+                    { id: 103, judul: "aa", deskripsi: "bbb", pengirim: "fadilah_citizen", status: "Reported" },
+                    { id: 104, judul: "Sampah Menumpuk", deskripsi: "Sampah di pasar pagi belum diangkut 3 hari, bau menyengat.", pengirim: "budi_warga", status: "Reported" },
+                    { id: 105, judul: "Lampu Penyeberangan Mati", deskripsi: "Sangat berbahaya bagi penyeberang jalan di depan kampus polinela.", pengirim: "anisa_cantik", status: "Selesai" },
+                    { id: 106, judul: "Pohon Tumbang Hambat Jalan", deskripsi: "Pohon tumbang menghalangi sebagian lajur lalu lintas kota.", pengirim: "nadia_lestari", status: "Reported" }
+                ];
+                localStorage.setItem('db_smartcity_portal_secure', JSON.stringify(localReportsDatabase));
+            }
+            renderAduanWarga();
+        }
+
+        // Core Render GUI Area
+        function renderAduanWarga() {
+            const container = document.getElementById('container-cards');
+            container.innerHTML = "";
+
+            // Menghitung Angka Badge Real-Time
+            let dftCount = localReportsDatabase.filter(i => (currentUser === 'admin' ? false : i.pengirim === currentUser) && i.status === 'Draft').length;
+            let prsCount = localReportsDatabase.filter(i => i.status === 'Reported').length;
+            let slsCount = localReportsDatabase.filter(i => i.status === 'Selesai').length;
+
+            document.getElementById('badge-draft').innerText = currentUser === 'admin' ? '0 (Hidden)' : dftCount;
+            document.getElementById('badge-proses').innerText = prsCount;
+            document.getElementById('badge-selesai').innerText = slsCount;
+
+            const grupTabMenu = document.getElementById('grup-tab-menu');
+            const btnTambah = document.getElementById('btn-tambah-laporan');
+
+            if (currentUser === 'admin') {
+                grupTabMenu.style.setProperty('display', 'none', 'important'); 
+                btnTambah.style.setProperty('display', 'none', 'important');   
+            } else {
+                grupTabMenu.style.setProperty('display', 'inline-flex', 'important');
+                btnTambah.style.setProperty('display', 'inline-block', 'important');
+            }
+
+            // Filter Distribusi Data
+            let dataTampil = [];
+            if (currentUser === 'admin') {
+                dataTampil = localReportsDatabase.filter(item => item.status !== 'Draft');
+            } else {
+                if (currentTab === "feed") {
+                    dataTampil = localReportsDatabase.filter(item => item.status !== 'Draft');
+                } else {
+                    dataTampil = localReportsDatabase.filter(item => item.pengirim === currentUser);
+                }
+            }
+
+            if (dataTampil.length === 0) {
+                container.innerHTML = `<div class="col-12 text-center py-5 text-muted"><i class="fa-solid fa-folder-open fa-2x mb-2"></i><br>Tidak ada data laporan.</div>`;
+                return;
+            }
+
+            dataTampil.forEach((item) => {
+                let displayNama = 'Anonim'; // Anonimitas Mutlak Untuk Semua Pengguna
+                
+                // Kondisi Tombol Aksi Dinamis
+                let tombolAksi = "";
+                if (currentUser === 'admin') {
+                    // Tombol Milik Admin
+                    tombolAksi = `<button class="btn btn-sm btn-warning fw-bold text-dark px-3 ms-2" onclick="bukaModalEditAdmin(${item.id})"><i class="fa-solid fa-pen-to-square me-1"></i>Edit Status</button>`;
+                } else if (currentUser !== 'admin' && item.status === 'Draft') {
+                    // BARU: Tombol khusus Client untuk mengedit laporan yang statusnya masih Draft
+                    tombolAksi = `<button class="btn btn-sm btn-outline-primary fw-bold px-3 ms-2" onclick="bukaModalEditDraftClient(${item.id})"><i class="fa-solid fa-user-gear me-1"></i>Edit Draft</button>`;
+                }
+
+                let badgeColor = "bg-info";
+                if (item.status === 'Draft') badgeColor = "bg-secondary";
+                if (item.status === 'Selesai') badgeColor = "bg-success";
+
+                container.innerHTML += `
+                    <div class="col-12 col-sm-6">
+                        <div class="card card-custom p-3 bg-white">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="fw-bold text-dark m-0">${item.judul}</h5>
+                                <span class="badge ${badgeColor} text-white small">${item.status}</span>
+                            </div>
+                            <p class="text-muted small mb-3">${item.deskripsi}</p>
+                            <div class="progress mb-3" style="height: 6px;"><div class="progress-bar ${item.status === 'Selesai' ? 'bg-success' : 'bg-info'} progress-bar-striped progress-bar-animated" style="width: ${item.status === 'Selesai' ? '100%' : '45%'}"></div></div>
+                            <div class="d-flex justify-content-between align-items-center border-top pt-2 mt-2 text-muted small">
+                                <span><i class="fa-solid fa-user me-1"></i> Pengirim: <b>${displayNama}</b></span>
+                                <div>${tombolAksi}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Pembuatan Pengaduan Baru oleh Client
+        document.getElementById('btn-simpan-aduan')?.addEventListener('click', function() {
+            const jdl = document.getElementById('add-judul').value.trim();
+            const dsk = document.getElementById('add-deskripsi').value.trim();
+            const sts = document.getElementById('add-status').value;
+
+            if (!jdl || !dsk) {
+                alert('Judul dan Deskripsi aduan wajib diisi!');
+                return;
+            }
+
+            let idBaru = localReportsDatabase.length > 0 ? Math.max(...localReportsDatabase.map(o => o.id)) + 1 : 1;
+            
+            localReportsDatabase.unshift({ id: idBaru, judul: jdl, deskripsi: dsk, pengirim: currentUser, status: sts });
+            localStorage.setItem('db_smartcity_portal_secure', JSON.stringify(localReportsDatabase));
+
+            document.getElementById('add-judul').value = "";
+            document.getElementById('add-deskripsi').value = "";
+            
+            bootstrap.Modal.getInstance(document.getElementById('modalTambahLaporan')).hide();
+            alert('Sukses memproses laporan warga!');
+            renderAduanWarga();
+        });
+
+        // BARU: Fungsi Membuka Modal Form Edit Draft untuk Client
+        function bukaModalEditDraftClient(targetId) {
+            let item = localReportsDatabase.find(o => o.id === targetId);
+
+            document.getElementById('edit-draft-id').value = targetId;
+            document.getElementById('edit-draft-judul').value = item.judul;
+            document.getElementById('edit-draft-deskripsi').value = item.deskripsi;
+            document.getElementById('edit-draft-status').value = item.status;
+            
+            new bootstrap.Modal(document.getElementById('modalEditDraftClient')).show();
+        }
+
+        // BARU: Eksekusi Menyimpan Hasil Perubahan Edit Draft oleh Client
+        document.getElementById('btn-update-draft-client')?.addEventListener('click', function() {
+            let targetId = parseInt(document.getElementById('edit-draft-id').value);
+            let judulBaru = document.getElementById('edit-draft-judul').value.trim();
+            let deskripsiBaru = document.getElementById('edit-draft-deskripsi').value.trim();
+            let statusBaru = document.getElementById('edit-draft-status').value;
+
+            if (!judulBaru || !deskripsiBaru) {
+                alert('Judul dan rincian deskripsi tidak boleh kosong!');
+                return;
+            }
+
+            let itemIndex = localReportsDatabase.findIndex(o => o.id === targetId);
+            localReportsDatabase[itemIndex].judul = judulBaru;
+            localReportsDatabase[itemIndex].deskripsi = deskripsiBaru;
+            localReportsDatabase[itemIndex].status = statusBaru;
+
+            localStorage.setItem('db_smartcity_portal_secure', JSON.stringify(localReportsDatabase));
+            bootstrap.Modal.getInstance(document.getElementById('modalEditDraftClient')).hide();
+
+            alert('Sukses memperbarui data laporan draft kamu!');
+            renderAduanWarga();
+        });
+
+        // Buka Editor Modal Khusus Admin
+        function bukaModalEditAdmin(targetId) {
+            let item = localReportsDatabase.find(o => o.id === targetId);
+
+            document.getElementById('edit-admin-index').value = targetId;
+            document.getElementById('edit-admin-judul').value = item.judul;
+            document.getElementById('edit-admin-status').value = item.status;
+            
+            new bootstrap.Modal(document.getElementById('modalEditAdmin')).show();
+        }
+
+        // Eksekusi Simpan Perubahan Status oleh Admin
+        document.getElementById('btn-update-admin')?.addEventListener('click', function() {
+            let targetId = parseInt(document.getElementById('edit-admin-index').value);
+            let statusBaru = document.getElementById('edit-admin-status').value;
+
+            let itemIndex = localReportsDatabase.findIndex(o => o.id === targetId);
+            localReportsDatabase[itemIndex].status = statusBaru;
+            
+            localStorage.setItem('db_smartcity_portal_secure', JSON.stringify(localReportsDatabase));
+            bootstrap.Modal.getInstance(document.getElementById('modalEditAdmin')).hide();
+
+            alert('Berhasil! Status rekap laporan warga telah diperbarui oleh Admin.');
+            renderAduanWarga();
+        });
+
+        // Navigasi Tab Menu Menu
+        document.getElementById('btn-feed-kota')?.addEventListener('click', function() {
+            currentTab = "feed";
+            this.classList.replace('btn-outline-primary', 'btn-primary');
+            document.getElementById('btn-laporan-saya').classList.replace('btn-primary', 'btn-outline-primary');
+            renderAduanWarga();
+        });
+
+        document.getElementById('btn-laporan-saya')?.addEventListener('click', function() {
+            currentTab = "saya";
+            this.classList.replace('btn-outline-primary', 'btn-primary');
+            document.getElementById('btn-feed-kota').classList.replace('btn-primary', 'btn-outline-primary');
+            renderAduanWarga();
+        });
+
+        // Keluar Sistem Portal
+        document.getElementById('btn-keluar-portal')?.addEventListener('click', function() {
+            window.location.hash = '';
+            location.reload();
+        });
+    </script>
+
+    <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Script penunjang bawaan lab -->
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/router.js"></script>
