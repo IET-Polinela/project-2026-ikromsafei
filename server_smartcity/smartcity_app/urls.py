@@ -144,6 +144,7 @@ def hapus_laporan_frontend(request, pk):
         messages.error(request, 'Akses ditolak!')
     return redirect('backend_home_root')
 
+# KODE YANG SUDAH BERSIH DAN SUCI DARI TEKS SAMPAH KROM:
 # ========================================================
 # URL PATTERNS
 # ========================================================
@@ -163,8 +164,8 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     
-    # OpenAPI-based Documentation Routing[cite: 1]
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),[cite: 1]
-    path('api/docs/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),[cite: 1]
-    path('api/docs/scalar/', scalar_viewer, name='scalar-ui'),[cite: 1]
+    # OpenAPI-based Documentation Routing
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/docs/scalar/', scalar_viewer, name='scalar-ui'),
 ]

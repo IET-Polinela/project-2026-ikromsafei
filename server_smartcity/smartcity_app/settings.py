@@ -85,9 +85,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Konfigurasi DRF Global Authentication & SimpleJWT (Lab 10, 14)
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',[cite: 1]
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
@@ -114,9 +113,10 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 # Metadata OpenAPI-based Documentation Lab 14[cite: 1]
+# Metadata OpenAPI-based Documentation Lab 14
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Smart City Portal API - Pesawaran',[cite: 1]
-    'DESCRIPTION': 'Dokumentasi REST API resmi untuk Portal Pelaporan Laporan Warga',[cite: 1]
-    'VERSION': '1.0.0',[cite: 1]
-    'SERVE_INCLUDE_SCHEMA': False,[cite: 1]
+    'TITLE': 'Smart City Portal API - Pesawaran',
+    'DESCRIPTION': 'Dokumentasi REST API resmi untuk Portal Pelaporan Laporan Warga',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
