@@ -63,15 +63,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'smartcity_app.wsgi.application'
 
-# Koneksi Database Kredensial Asli Kelompok mhs08
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'db_mhs08',        
-        'USER': 'mhs08',          
-        'PASSWORD': 'mhs08', 
-        'HOST': '127.0.0.1',      
-        'PORT': '5432',           
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
