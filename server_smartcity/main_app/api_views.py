@@ -1,6 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from drf_spectacular.utils import extend_schema
 from .models import Report
 from .serializers import ReportSerializer
 
@@ -13,8 +14,8 @@ class ReportViewSet(viewsets.ModelViewSet):
         return Report.objects.all().order_by('-id')
 
     def perform_create(self, serializer):
-        # Otomatis menyimpan laporan berdasarkan akun warga yang sedang login
-        serializer.save(user=self.request.user)
+        # Menghubungkan reporter ke user yang sedang login lewat token JWT
+        serializer.save(reporter=self.request.user)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
