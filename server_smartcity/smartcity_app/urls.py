@@ -10,7 +10,7 @@ from main_app.models import Report
 from usermanagement.api_views import RegisterView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-# FIX: Import pustaka dokumentasi OpenAPI Lab 14 agar tidak NameError
+# Import pustaka dokumentasi OpenAPI Lab 14
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from django_scalar.views import scalar_viewer
 
@@ -35,10 +35,10 @@ def backend_landing_page(request):
             jumlah_resolved = Report.objects.filter(status__iexact='RESOLVED').count()
             jumlah_draft = 0
         else:
-            # Warga melihat laporan publik + draft miliknya sendiri
+            # FIX: Warga melihat draft miliknya sendiri ATAU semua laporan publik yang BUKAN draft (~Q)
             reports_data = Report.objects.filter(
                 Q(status__iexact='draft', reporter=request.user) | 
-                Q(status__iexact='draft')
+                ~Q(status__iexact='draft')
             ).order_by('-id')
             
             total_laporan = reports_data.count()
@@ -117,13 +117,11 @@ def ubah_laporan_frontend(request, pk):
     if request.method == 'POST' and request.user.is_authenticated:
         laporan = get_object_or_404(Report, pk=pk)
         
-        # Admin mengubah status progres
         if request.user.is_staff or request.user.is_superuser:
             laporan.status = request.POST.get('status', 'REPORTED')
             laporan.save()
             messages.success(request, f'Status laporan ID #{pk} berhasil diperbarui!')
             
-        # Warga mengubah isi draft miliknya sendiri
         elif laporan.reporter == request.user and laporan.status.lower() == 'draft':
             laporan.title = request.POST.get('title', laporan.title)
             laporan.location = request.POST.get('location', laporan.location)
@@ -144,7 +142,6 @@ def hapus_laporan_frontend(request, pk):
         messages.error(request, 'Akses ditolak!')
     return redirect('backend_home_root')
 
-# KODE YANG SUDAH BERSIH DAN SUCI DARI TEKS SAMPAH KROM:
 # ========================================================
 # URL PATTERNS
 # ========================================================

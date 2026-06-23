@@ -138,7 +138,6 @@
 </head>
 <body>
 
-    <!-- NAVBAR ATAS -->
     <nav class="navbar navbar-expand-lg navbar-custom navbar-dark shadow-sm">
         <div class="container">
             <a class="navbar-brand d-flex flex-column" href="/">
@@ -166,7 +165,6 @@
         </div>
     </nav>
 
-    <!-- ALERT MESSAGES -->
     <div class="container mt-3">
         {% if messages %}
             {% for message in messages %}
@@ -178,7 +176,6 @@
         {% endif %}
     </div>
 
-    <!-- INTERFACE LOGIN -->
     {% if not user.is_authenticated %}
     <div class="container my-auto">
         <div class="portal-container row mx-auto">
@@ -218,7 +215,6 @@
         </div>
     </div>
 
-    <!-- INTERFACE DASHBOARD UTAMA -->
     {% else %}
     <div class="container my-4 mb-5">
         
@@ -334,7 +330,6 @@
                                     <div class="btn-group gap-1">
                                         <button class="btn btn-sm btn-light border" title="Lihat"><i class="fa-solid fa-eye"></i></button>
                                         
-                                        <!-- LOGIKA DISINI SUDAH KEMBALI MENGGUNAKAN BAHASA INGGRIS UNTUK DJANGO -->
                                         {% if user.is_staff or user.is_superuser %}
                                             <button class="btn btn-sm btn-warning border text-white" data-bs-toggle="modal" data-bs-target="#modalEditStatus{{ report.id }}" title="Ubah Status"><i class="fa-solid fa-pencil"></i></button>
                                             <a href="{% url 'hapus_laporan_frontend' report.id %}" class="btn btn-sm btn-danger border" onclick="return confirm('Apakah Anda yakin ingin menghapus aduan ini?')" title="Hapus"><i class="fa-solid fa-trash"></i></a>
@@ -357,10 +352,8 @@
     </div>
     {% endif %}
 
-    <!-- FOOTER -->
     <footer><div class="container fw-medium">© 2026 <span style="color: var(--primary-brown); font-weight: 700;">Pesawaran</span>.</div></footer>
 
-    <!-- MODAL POPUPS -->
     {% if user.is_staff or user.is_superuser %}
         {% for report in reports %}
         <div class="modal fade" id="modalEditStatus{{ report.id }}" tabindex="-1" aria-hidden="true">
@@ -440,7 +433,6 @@
         {% endfor %}
     {% endif %}
 
-    <!-- REGISTER WARGA -->
     <div class="modal fade" id="modalRegister" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
@@ -468,7 +460,6 @@
         </div>
     </div>
 
-    <!-- TAMBAH LAPORAN -->
     <div class="modal fade" id="modalTambahLaporan" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
@@ -499,7 +490,6 @@
         </div>
     </div>
 
-    <!-- TENTANG -->
     <div class="modal fade" id="modalTentang" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
@@ -521,7 +511,6 @@
         </div>
     </div>
 
-    <!-- KONTAK -->
     <div class="modal fade" id="modalKontak" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
