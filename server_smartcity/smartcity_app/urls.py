@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib import messages
 from django.db.models import Q
-from django.http import JsonResponse # Ditambahkan untuk suplai data Chart.js
+from django.http import JsonResponse
 from rest_framework.routers import DefaultRouter
 from main_app.api_views import ReportViewSet
 from main_app.models import Report
@@ -41,7 +41,7 @@ def backend_landing_page(request):
             jumlah_resolved = Report.objects.filter(status__iexact='RESOLVED').count()
             jumlah_draft = 0
         else:
-            # FIX: Warga melihat draft miliknya sendiri ATAU semua laporan publik yang BUKAN draft (~Q)
+            # Warga melihat draft miliknya sendiri ATAU semua laporan publik yang BUKAN draft (~Q)
             reports_data = Report.objects.filter(
                 Q(status__iexact='draft', reporter=request.user) | 
                 ~Q(status__iexact='draft')

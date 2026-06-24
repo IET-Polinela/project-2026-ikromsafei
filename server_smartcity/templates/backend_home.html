@@ -152,7 +152,7 @@
                     <li class="nav-item"><a class="nav-link active" href="/">🏠 Rumah</a></li>
                     
                     {% if user.is_authenticated and user.is_staff %}
-                        <li class="nav-item"><a class="nav-link" href="#tabel-laporan" style="color: var(--accent-gold) !important;"><i class="fa-solid fa-chart-column me-1"></i> Statistik Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#grafik-analitik" style="color: var(--accent-gold) !important;"><i class="fa-solid fa-chart-column me-1"></i> Statistik Dashboard</a></li>
                     {% endif %}
                     
                     <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalTentang">ℹ️ Tentang</a></li>
@@ -284,7 +284,7 @@
         </div>
 
         {% if user.is_staff or user.is_superuser %}
-        <div class="row mb-4">
+        <div class="row mb-4" id="grafik-analitik">
             <div class="col-md-6 mb-3">
                 <div class="card card-custom p-3 border h-100">
                     <h6 class="fw-bold mb-3" style="color: var(--primary-brown);"><i class="fa-solid fa-chart-pie me-2"></i>Persentase Status Laporan</h6>
@@ -587,7 +587,7 @@
                             labels: ['DRAFT', 'REPORTED', 'VERIFIED', 'RESOLVED'],
                             datasets: [{
                                 data: [data.status.draft, data.status.reported, data.status.verified, data.status.resolved],
-                                backgroundColor: ['#A0A0A0', '#6E4720', '#D4AF37', '#155724'], // Sesuai palet premium kamu
+                                backgroundColor: ['#A0A0A0', '#6E4720', '#D4AF37', '#155724'], 
                                 borderWidth: 2
                             }]
                         },
@@ -608,7 +608,7 @@
                             datasets: [{
                                 label: 'Jumlah Laporan aduan',
                                 data: Object.values(data.kategori),
-                                backgroundColor: ['#E3D4C1', '#F4A460', '#DEB887', '#D2B48C', '#CD853F'], // Nuansa kayu cokelat
+                                backgroundColor: ['#E3D4C1', '#F4A460', '#DEB887', '#D2B48C', '#CD853F'], 
                                 borderColor: '#4A2E11',
                                 borderWidth: 1
                             }]
